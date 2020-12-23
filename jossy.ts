@@ -18,11 +18,12 @@ class NoOp implements Command {
 class Type implements Command {
     expression: string;
 
-    constructor(tokens: Iterable<string>) {
-        this.expression = '';
-        for (const token of tokens) {
-            this.expression += token;
-        }
+    constructor(expression: string) {
+        this.expression = expression;
+    }
+
+    static parse(tokens: Iterable<[Token, string]>): Command {
+        return new Type(Array.from(tokens).map(([type, raw]) => raw).join(''));
     }
 
     /**
@@ -32,28 +33,88 @@ class Type implements Command {
      */
     eval(joss: Joss): LineLocation | null {
         joss.output(this.expression);
+        joss.output('\n');
         return null;
     }
 }
 
-function parse(tokens: IterableIterator<string>): Command {
+function parse(tokens: IterableIterator<[Token, string]>): Command {
     const {value, done} = tokens.next();
 
     if (done) {
         return new NoOp();
     }
 
-    switch (value) {
+    const [type, raw] = value;
+
+    if (type !== Token.ID) {
+        throw new Error('Expecting verb to start command');
+    }
+
+    switch (raw) {
         case 'Type':
-            return new Type(tokens);
-        case '':
-            return new NoOp();
+            return Type.parse(tokens);
         default:
-            throw new Error(`Verb not supported: ${value}`);
+            throw new Error('Unknown verb to start command');
     }
 }
 
-function *tokenise(s: string): IterableIterator<string> {
+enum Token {
+    SPACE,
+    ID,
+    VAR,
+    NUM,
+    OP,
+    STR,
+    PAREN,
+    STOP,
+    OTHER,
+}
+
+const TOKEN_TYPES: Record<Token, RegExp> = {
+    [Token.SPACE]: /\s+/,
+    [Token.ID]: /(?:Type)/,
+    [Token.VAR]: /[A-Za-z]\w+/,
+    [Token.NUM]: /[0-9.]+/,
+    [Token.OP]: /[><]=|[-+*/^=<>]/,
+    [Token.STR]: /"[^"]*"/,
+    [Token.PAREN]: /[()]/,
+    [Token.STOP]: /[.]/,
+    [Token.OTHER]: /./,
+};
+
+// Build TYPES into a set of named groups.
+const TOKEN_REGEX = Object.entries(TOKEN_TYPES).map(([k, v]) => `(?<${Token[k as keyof typeof Token]}>${v.source})`).join('|');
+
+class PeekableIterator<T> implements IterableIterator<T> {
+    it: IterableIterator<T>;
+    state: IteratorResult<T>;
+
+    constructor(it: IterableIterator<T>) {
+        this.it = it;
+        this.state = it.next();
+    }
+
+    next(): IteratorResult<T> {
+        const oldState = this.state;
+        this.state = this.it.next();
+        return oldState;
+    }
+
+    peek(): IteratorResult<T> {
+        return this.state;
+    }
+
+    [Symbol.iterator](): IterableIterator<T> {
+        return this;
+    }
+}
+
+function tokenise(s: string): IterableIterator<[Token, string]> {
+    return new PeekableIterator(_tokenise(s));
+}
+
+function *_tokenise(s: string): IterableIterator<[Token, string]> {
     s = s.trim();
 
     if (s === '' || s.startsWith('*') || s.endsWith('*')) {
@@ -61,18 +122,19 @@ function *tokenise(s: string): IterableIterator<string> {
         return;
     }
 
-    if (!s.endsWith('.')) {
-        throw new Error('Command must end with ".".');
-    }
+    const re = new RegExp(TOKEN_REGEX, 'y');
 
-    let match;
-    while (s !== '') {
-      if (match = s.match(/[A-Za-z]:/) {
-      }
+    let m;
+    while ((m = re.exec(s)) && m.groups) {
+        for (const [typeString, value] of Object.entries(m.groups)) {
+            if (value !== undefined) {
+                const type = Token[typeString as keyof typeof Token];
+                if (type !== Token.SPACE) {
+                    yield [type, value];
+                }
+            }
+        }
     }
-
-    /(\S+)(\s+(.*))?\.$/.match(s):
-    yield *s.split(' ');
 }
 
 class Joss {
