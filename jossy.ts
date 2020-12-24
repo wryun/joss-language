@@ -61,18 +61,79 @@ class NoOp implements Command {
     }
 }
 
+interface BinaryOperator {
+    prec: number;
+    fn: (a: number, b: number) => number;
+}
+
 abstract class NumericExpression {
     abstract eval(joss: Joss): number;
 
-    static parse(tokens: TokenIterator<Token>): NumericExpression {
-        tokens.next();
-        return new FakeNumericExpression();
+    static parse(tokens: TokenIterator<Token>, precedence: number = 0): NumericExpression {
+        return this.parse_binary(tokens, this.parse_unary(tokens));
+    }
+
+    static parse_unary(tokens: TokenIterator<Token>): NumericExpression {
+        const token = tokens.next();
+        if (token.type !== TokenType.NUM) {
+            throw new Error(`Only number supported - got '${token.raw}'`);
+        }
+
+        return new NumberExpression(Number(token.raw));
+    }
+
+    static BINARY_OPERATORS: Record<string, BinaryOperator> = {
+        '+': {prec: 1, fn: (a, b) => a + b},
+        '-': {prec: 1, fn: (a, b) => a - b},
+        '/': {prec: 2, fn: (a, b) => a / b},
+        '*': {prec: 2, fn: (a, b) => a * b},
+    }
+
+    static parse_binary(tokens: TokenIterator<Token>, lhs: NumericExpression, min_prec: number = 0): NumericExpression {
+        let token = tokens.peek();
+        let current: BinaryOperator;
+        let next: BinaryOperator;
+        let rhs: NumericExpression;
+
+        // From wikipedia's 'Precedence Climbing' pseudocode: https://en.wikipedia.org/wiki/Operator-precedence_parser
+        while (token.type === TokenType.OP && (current = this.BINARY_OPERATORS[token.raw]).prec >= min_prec) {
+            tokens.next();
+            rhs = this.parse_unary(tokens);
+            while ((token = tokens.peek()).type === TokenType.OP && (next = this.BINARY_OPERATORS[token.raw]).prec > current.prec) {
+                rhs = this.parse_binary(tokens, rhs, next.prec);
+            }
+            lhs = new BinaryNumericExpression(current.fn, lhs, rhs);
+        }
+
+        return lhs;
     }
 }
 
-class FakeNumericExpression implements NumericExpression {
+class NumberExpression implements NumericExpression {
+    num: number;
+
+    constructor(num: number) {
+        this.num = num;
+    }
+
     eval(joss: Joss): number {
-        return 1;
+        return this.num;
+    }
+}
+
+class BinaryNumericExpression implements NumericExpression {
+    fn: (a: number, b: number) => number;
+    lhs: NumericExpression;
+    rhs: NumericExpression;
+
+    constructor(fn: (a: number, b: number) => number, lhs: NumericExpression, rhs: NumericExpression) {
+        this.fn = fn;
+        this.lhs = lhs;
+        this.rhs = rhs;
+    }
+
+    eval(joss: Joss): number {
+        return this.fn(this.lhs.eval(joss), this.rhs.eval(joss));
     }
 }
 
