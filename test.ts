@@ -13,8 +13,8 @@ for (const file of expandGlobSync("tests/*.session")) {
 
     let expected = '';
     for (const line of Deno.readTextFileSync(file.path).split('\n')) {
-      if (line.startsWith('> ')) {
-        expected += line.slice(2) + '\n';
+      if (!line.startsWith('> ')) {
+        expected += line + '\n';
         continue;
       }
 
@@ -22,7 +22,7 @@ for (const file of expandGlobSync("tests/*.session")) {
         assertEquals(decoder.decode(Deno.readAllSync(output)), expected);
         expected = '';
       }
-      joss.eval(line);
+      joss.eval(line.slice(2));
     }
   });
 }

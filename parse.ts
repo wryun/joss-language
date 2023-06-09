@@ -26,6 +26,8 @@ abstract class Command {
             switch (token.raw) {
             case 'Type':
                 return Type.parse(tokens);
+            case 'Set':
+                return Set.parse(tokens);
             default:
                 throw new Error(`${token.raw} is not a command`);
             }
@@ -53,17 +55,20 @@ interface BinaryOperator {
 abstract class NumericExpression {
     abstract eval(joss: Joss): number;
 
-    static parse(tokens: TokenIterator<Token>, precedence: number = 0): NumericExpression {
+    static parse(tokens: TokenIterator<Token>): NumericExpression {
         return this.parse_binary(tokens, this.parse_unary(tokens));
     }
 
     static parse_unary(tokens: TokenIterator<Token>): NumericExpression {
         const token = tokens.next();
-        if (token.type !== TokenType.NUM) {
-            throw new Error(`Only number supported - got '${token.raw}'`);
+        switch (token.type) {
+            case TokenType.NUM:
+                return new NumberExpression(Number(token.raw));
+            case TokenType.VAR:
+                return new VariableExpression(token.raw);
+            default:
+                throw new Error(`Only number supported - got '${token.raw}'`);
         }
-
-        return new NumberExpression(Number(token.raw));
     }
 
     static BINARY_OPERATORS: Record<string, BinaryOperator> = {
@@ -73,7 +78,7 @@ abstract class NumericExpression {
         '*': {prec: 2, fn: (a, b) => a * b},
     }
 
-    static parse_binary(tokens: TokenIterator<Token>, lhs: NumericExpression, min_prec: number = 0): NumericExpression {
+    static parse_binary(tokens: TokenIterator<Token>, lhs: NumericExpression, min_prec = 0): NumericExpression {
         let token = tokens.peek();
         let current: BinaryOperator;
         let next: BinaryOperator;
@@ -90,6 +95,18 @@ abstract class NumericExpression {
         }
 
         return lhs;
+    }
+}
+
+class VariableExpression implements NumericExpression {
+    v: string;
+
+    constructor(v: string) {
+        this.v = v;
+    }
+
+    eval(joss: Joss): number {
+        return joss.get(this.v);
     }
 }
 
@@ -152,6 +169,36 @@ class String implements Expression {
         const token = tokens.next();
         // assert type === TokenType.STR
         return new String(token.raw.slice(1, -1));
+    }
+}
+
+class Set implements Command {
+    target: string;
+    expression: NumericExpression;
+
+    constructor(target: string, expression: NumericExpression) {
+        this.expression = expression;
+        this.target = target;
+    }
+
+    static parse(tokens: TokenIterator<Token>): Set {
+        let token = tokens.next();
+        if (token.type !== TokenType.VAR) {
+            throw new Error(`Set must be followed by variable name; got ${token.type}: ${token.raw}`);
+        }
+        const target = token.raw;
+
+        token = tokens.next();
+        if (token.type !== TokenType.OP && token.raw !== '=') {
+            throw new Error(`Set must have = after variable; got ${token.raw}`);
+        }
+
+        return new Set(target, NumericExpression.parse(tokens));
+    }
+
+    eval(joss: Joss): LineLocation | null {
+        joss.set(this.target, this.expression.eval(joss));
+        return null;
     }
 }
 

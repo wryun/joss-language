@@ -5,18 +5,28 @@ import { tokenise } from './tokenise.ts';
 
 
 class Joss {
-    stdout: any;
-    stdin: any;
-    program: object; // {1: {1: {raw, tokens}}}
+    stdout: Deno.WriterSync;
+    stdin: Deno.Reader;
+    variables: Record<string, number>;
+    // program: object; // {1: {1: {raw, tokens}}}
 
-    constructor(stdin: Deno.Reader, stdout: Deno.Writer) {
+    constructor(stdin: Deno.Reader, stdout: Deno.WriterSync) {
         this.stdout = stdout;
         this.stdin = stdin;
-        this.program = {};
+        this.variables = {};
+        // this.program = {};
     }
 
     output(s: string) {
         Deno.writeAllSync(this.stdout, new TextEncoder().encode(s));
+    }
+
+    set(s: string, v: number) {
+        this.variables[s] = v;
+    }
+
+    get(s: string) {
+        return this.variables[s];
     }
 
     eval(s: string) {

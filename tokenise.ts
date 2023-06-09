@@ -22,8 +22,8 @@ enum TokenType {
 
 const TOKEN_TYPES: Record<TokenType, RegExp> = {
     [TokenType.SPACE]: /\s+/,
-    [TokenType.ID]: /(?:Type)/,
-    [TokenType.VAR]: /[A-Za-z]\w+/,
+    [TokenType.ID]: /(?:Type|Set)/,
+    [TokenType.VAR]: /[A-Za-z]\w*/,
     [TokenType.NUM]: /[0-9.]+/,
     [TokenType.OP]: /[><]=|[-+*/^=<>]/,
     [TokenType.STR]: /".*"/, // Oddly, this greedy behaviour for double quotes is correct.
@@ -40,15 +40,17 @@ const TOKEN_REGEX = Object.entries(TOKEN_TYPES).map(([k, v]) => `(?<${TokenType[
 class TokenIterator<T> {
     it: Iterator<T>;
     state: T;
+    terminal: T;
 
-    constructor(it: Iterator<T>) {
+    constructor(it: Iterator<T>, terminal: T) {
         this.it = it;
+        this.terminal = terminal;
         this.state = this._next();
     }
 
     _next(): T {
         const {value, done} = this.it.next();
-        return done ? {type: TokenType.END, raw: ''} : value;
+        return done ? this.terminal : value;
     }
 
     next(): T {
@@ -64,7 +66,7 @@ class TokenIterator<T> {
 }
 
 function tokenise(s: string): TokenIterator<Token> {
-    return new TokenIterator(_tokenise(s));
+    return new TokenIterator(_tokenise(s), {type: TokenType.END, raw: ''});
 }
 
 function *_tokenise(s: string): Iterator<Token> {
