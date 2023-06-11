@@ -1,7 +1,7 @@
 import { expandGlobSync } from "https://deno.land/std@0.82.0/fs/mod.ts";
 import { assertEquals } from "https://deno.land/std@0.82.0/testing/asserts.ts";
 
-import { Joss } from './jossy.ts';
+import { Joss } from './joss.ts';
 
 const decoder = new TextDecoder();
 

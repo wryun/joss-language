@@ -1,7 +1,7 @@
 export {parse};
 
 import { Token, TokenType, TokenIterator } from './tokenise.ts';
-import { Joss, Result, Step } from './jossy.ts';
+import { Joss, Result, Step } from './joss.ts';
 
 function expect(context: string, t: Token, type: TokenType, raw: (string|null) = null): Token {
     const matches = t.type === type && (raw === null || t.raw === raw);

@@ -1,27 +1,19 @@
-Reimplementation of MATH(JOSS) in typescript (as a library).
+# MATH(JOSS)
 
-# Immediate work
+WIP Reimplementation of MATH(JOSS) in typescript.
 
-- tokeniser + recursive descent parser
-- JOSS style calculator
-- compat mode (Eh? / `^*` / etc.)
-- Implement the language...
+This is IBM's version of the JOSS language.
 
-Use:
+Currently, only some basic constructs are implemented
+(expression evaluation, Type/Set/Do/if/for/times).
+`tests/` roughly tracks what should currently work.
 
-  # fs = filesystem abstraction - store/end
-  # keyboard = JOSS/CTS/modern
-  # mode = compat mode (i.e. original error messages, helpful ones...)
-  joss = new JOSS(keyboard, mode, stdout, stderr, fs)
-  result = joss.eval('blah\nblah\n')
-  result.ok
-  result.output
+At the moment, it's not as restrictive as the original:
 
-# Future work
+- slightly more helpful errors
+- allows multi-char identifiers
+- more relaxed about spaces in expressions
+- no 10 dimension/10 argument limit on arrays
 
-- CLI frontend (Green!)
-- Web frontend
-- Web 'timesharing' system
-- Collect example programs
-- Upload CTS papers
-- Profit?
+But, error handling also needs work (e.g. type safety
+rather than casting everywhere and hoping for the best).
