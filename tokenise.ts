@@ -2,8 +2,8 @@ export type {Token};
 export {TokenType, TokenIterator, tokenise};
 
 interface Token {
-    type: TokenType,
-    raw: string,
+    type: TokenType
+    raw: string
 }
 
 enum TokenType {
@@ -24,7 +24,7 @@ const TOKEN_TYPES: Record<TokenType, RegExp> = {
     [TokenType.SPACE]: /\s+/,
     [TokenType.ID]: /(?:Type|Set)/,
     [TokenType.VAR]: /[A-Za-z]\w*/,
-    [TokenType.NUM]: /[0-9.]+/,
+    [TokenType.NUM]: /(?:[0-9]*[.][0-9]+|[0-9]+)/,
     [TokenType.OP]: /[><]=|[-+*/^=<>]/,
     [TokenType.STR]: /".*"/, // Oddly, this greedy behaviour for double quotes is correct.
     [TokenType.PAREN]: /[()]/,
@@ -57,7 +57,6 @@ class TokenIterator<T> {
         const oldState = this.state;            
         this.state = this._next();
         return oldState;
-
     }
 
     peek(): T {

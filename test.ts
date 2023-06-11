@@ -5,24 +5,43 @@ import { Joss } from './jossy.ts';
 
 const decoder = new TextDecoder();
 
-
-for (const file of expandGlobSync("tests/*.session")) {
-  Deno.test(file.name, () => {
-    const output = new Deno.Buffer();
-    const joss = new Joss(Deno.stdin, output);
-
+function *get_tests() {
+  for (const file of expandGlobSync("tests/*.session")) {
     let expected = '';
+    let lineno = 0;
+    let command = '';
+    let command_lineno = 0;
     for (const line of Deno.readTextFileSync(file.path).split('\n')) {
+      lineno += 1;
       if (!line.startsWith('> ')) {
         expected += line + '\n';
         continue;
       }
 
-      if (expected != '') {
-        assertEquals(decoder.decode(Deno.readAllSync(output)), expected);
-        expected = '';
+      if (command !== '') {
+        yield {fname: file.name, command_lineno, command, expected};
       }
-      joss.eval(line.slice(2));
+      command = line.slice(2);
+      command_lineno = lineno;
+      expected = '';
     }
+
+    yield {fname: file.name, command_lineno, command, expected};
+  }
+}
+
+let old_fname: string|null = null;
+const output = new Deno.Buffer();
+let joss = new Joss(Deno.stdin, output);
+
+for (const {fname, command_lineno, command, expected} of get_tests()) {
+  if (old_fname && old_fname !== fname) {
+    joss = new Joss(Deno.stdin, output);
+    old_fname = fname;
+  }
+
+  Deno.test(`${fname}: ${command_lineno}: ${command}`, () => {
+    joss.eval(command);
+    assertEquals(decoder.decode(Deno.readAllSync(output)), expected);
   });
 }
