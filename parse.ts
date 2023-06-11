@@ -1,7 +1,7 @@
 export {parse};
 
 import { Token, TokenType, TokenIterator } from './tokenise.ts';
-import { Joss, Result } from './jossy.ts';
+import { Joss, Result, Step } from './jossy.ts';
 
 function expect(context: string, t: Token, type: TokenType, raw: (string|null) = null): Token {
     const matches = t.type === type && (raw === null || t.raw === raw);
@@ -11,12 +11,7 @@ function expect(context: string, t: Token, type: TokenType, raw: (string|null) =
     return t;
 }
 
-interface LineLocation {
-    part: number;
-    step: number;
-}
-
-class Command {
+class Command implements Step {
     verb: Verb;
     ifmodifier: If|null;
 
@@ -25,16 +20,9 @@ class Command {
         this.ifmodifier = ifmodifier;
     }
 
-    /**
-     * 
-     * @param joss 
-     * @returns line location to go to next (or null if not a goto)
-     */
-    eval(joss: Joss): LineLocation | null {
+    eval(joss: Joss): void {
         if (!this.ifmodifier || this.ifmodifier.eval(joss)) {
-            return this.verb.eval(joss);
-        } else {
-            return null;
+            this.verb.eval(joss);
         }
     }
 
@@ -54,12 +42,15 @@ class Command {
             case 'Set':
                 verb = Set.parse(tokens);
                 break;
+            case 'Do':
+                verb = Do.parse(tokens);
+                break;
             default:
                 throw new Error(`${token.raw} is not a command`);
             }
             break;
         default:
-            throw new Error('Expecting verb to start command');
+            throw new Error(`Expecting verb to start command, got ${token.raw}`);
         }
 
         return new Command(verb, tokens.peek().raw === 'if' ? If.parse(tokens) : null);
@@ -83,7 +74,7 @@ class If {
     }
 
     static parse(tokens: TokenIterator<Token>): If {
-        expect('', tokens.next(), TokenType.VAR, 'if');
+        expect('', tokens.next(), TokenType.ID, 'if');
 
         // TODO distinguish types properly.
         return new If(Expression.parse(tokens));
@@ -96,13 +87,11 @@ abstract class Verb {
      * @param joss 
      * @returns line location to go to next (or null if not a goto)
      */
-    abstract eval(joss: Joss): LineLocation | null;
+    abstract eval(joss: Joss): void;
 }
 
 class NoOp implements Verb {
-    eval(joss: Joss): LineLocation | null {
-        return null;
-    }
+    eval(_joss: Joss): void {}
 }
 
 interface BinaryOperator {
@@ -195,10 +184,8 @@ class VariableExpression implements Expression {
     eval_set(joss: Joss, value: Result) {
         if (this.indices.length > 0) {
             joss.setArray(this.v, this.indices.map(i => Number(i.eval(joss))), value);
-        } else if (typeof value === 'boolean' || typeof value === 'number') {
-            joss.setVariable(this.v, value);
         } else {
-            joss.setFunction(this.v, value);
+            joss.setVariable(this.v, value);
         }
     }
 
@@ -310,9 +297,8 @@ class Set implements Verb {
         return new Set(var_expression, Expression.parse(tokens));
     }
 
-    eval(joss: Joss): LineLocation | null {
+    eval(joss: Joss): void {
         this.target.eval_set(joss, this.expression.eval(joss));
-        return null;
     }
 }
 
@@ -353,20 +339,183 @@ class Type implements Verb {
         return new Type(expressions);
     }
 
-    eval(joss: Joss): LineLocation | null {
+    eval(joss: Joss): void {
         for (const e of this.expressions) {
             joss.output(e.eval(joss));
             joss.output('\n');
         }
-        return null;
     }
 }
 
-function parse(tokens: TokenIterator<Token>): Command {
-    const command = Command.parse(tokens);
+class ValueRange {
+    generators: ((joss: Joss) => Generator<Result>)[];
 
-    // modifiers
+    constructor() {
+        this.generators = [];
+    }
 
-    expect('End of command', tokens.next(), TokenType.PERIOD);
-    return command;
+    *eval(joss: Joss) {
+        for (const g of this.generators) {
+            yield* g(joss);
+        }
+    }
+
+    addSingleValueGenerator(e: Expression) {
+        this.generators.push(function *(joss: Joss) {
+            yield e.eval(joss);
+        });
+    }
+
+    addRangeGenerator(start: Expression, step: Expression, end: Expression) {
+        this.generators.push(function *(joss: Joss) {
+            const endval = Number(end.eval(joss));
+            const stepval = Number(step.eval(joss));
+            for (let i = Number(start.eval(joss)); i < endval; i += stepval) {
+                yield i;
+            }
+        });
+    }
+
+    static parse(tokens: TokenIterator<Token>): ValueRange {
+        const vr = new ValueRange();
+        let start = Expression.parse(tokens);
+
+        // : ends range expression for function arg,
+        // and . when used in for modifier.
+        while (![':', '.'].includes(tokens.peek().raw)) {
+            const token = tokens.next();
+            if (token.raw === ',') {
+                vr.addSingleValueGenerator(start);
+                start = Expression.parse(tokens);
+            } else if (token.raw === '(') {
+                const step = Expression.parse(tokens);
+                expect('end of step in range', tokens.next(), TokenType.PAREN, ')');
+                const end = Expression.parse(tokens);
+                vr.addRangeGenerator(start, step, end);
+                start = end;
+            }
+        }
+
+        vr.addSingleValueGenerator(start);
+        return vr;
+    }
+}
+
+class Do implements Verb {
+    part: string;
+    step: string | null;
+    times: Expression | null;
+    for: {s: string, range: ValueRange} | null;
+
+    constructor(part: string, step: string | null = null) {
+        this.part = part;
+        this.step = step;
+        this.times = null;
+        this.for = null;
+    }
+
+    // i.e. eval without modifier.
+    evalDo(joss: Joss): void {
+        if (this.step) {
+            joss.getStep(this.part, this.step).eval(joss);
+        } else {
+            for (const step of joss.getPartSteps(this.part)) {
+                step.eval(joss);
+            }
+        }
+    }
+
+    eval(joss: Joss): void {
+        if (this.times) {
+            for (let i = 0; i < Number(this.times.eval(joss)); ++i) {
+                this.evalDo(joss);
+            }
+        } else if (this.for) {
+            for (const v of this.for.range.eval(joss)) {
+                joss.setVariable(this.for.s, v);
+                this.evalDo(joss);
+            }
+        } else {
+            this.evalDo(joss);
+        }
+    }
+
+    static parse(tokens: TokenIterator<Token>): Do {
+        let token = tokens.next();
+        switch (token.raw) {
+            case 'step':
+                token = tokens.next();
+                if (!token.raw.includes('.')) {
+                    throw new Error('Invalid step (i.e. must be 1.1, not 1)');
+                }
+                break;
+            case 'part':
+                token = tokens.next();
+                if (token.raw.includes('.')) {
+                    throw new Error('Invalid part (i.e. must be 1, not 1.1)');
+                }
+                break;
+            default:
+                throw new Error('Expecting step or part after Do');
+        }
+
+        const [part, step] = token.raw.split('.');
+        const doVerb = new Do(part, step || null);
+
+        // Add possible modifier.
+        switch  (tokens.peek().raw) {
+            case 'for':
+                tokens.next();
+                token = expect('variable for range', tokens.next(), TokenType.VAR);
+                expect('= for range', tokens.next(), TokenType.OP, '=');
+                doVerb.for = {s: token.raw, range: ValueRange.parse(tokens)};
+                break;
+            case ',':
+                tokens.next();
+                doVerb.times = Expression.parse(tokens);
+                expect('expecting times after expression following for', tokens.next(), TokenType.ID, 'times');
+                break;
+            default:
+                break;
+        }
+
+        return doVerb;
+    }
+}
+
+class StoredCommand {
+    part: string;
+    step: string;
+    command: Command;
+
+    constructor(part: string, step: string, command: Command) {
+        this.part = part;
+        this.step = step;
+        this.command = command;
+    }
+
+    eval(joss: Joss): void {
+        joss.setStep(this.part, this.step, this.command);
+    }
+
+    static parse(tokens: TokenIterator<Token>): StoredCommand {
+        const token = tokens.next();
+        if (!token.raw.includes('.')) {
+            throw new Error('Line number without step (i.e. must be 1.1, not 1)');
+        }
+        const [part, step] = token.raw.split('.');
+        return new StoredCommand(part, step, Command.parse(tokens));
+    }
+}
+
+function parse(tokens: TokenIterator<Token>): Command|StoredCommand {
+    if (tokens.peek().type === TokenType.NUM) {
+        const sc = StoredCommand.parse(tokens);
+        expect('End of command', tokens.next(), TokenType.PERIOD);
+        return sc;
+    } else {
+        const command = Command.parse(tokens);
+        expect('End of command', tokens.next(), TokenType.PERIOD);
+        return command;
+    }
 }

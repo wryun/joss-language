@@ -22,7 +22,7 @@ enum TokenType {
 
 const TOKEN_TYPES: Record<TokenType, RegExp> = {
     [TokenType.SPACE]: /\s+/,
-    [TokenType.ID]: /(?:Type|Set)/,
+    [TokenType.ID]: /(?:Type|Set|Do|if|for|times|step|part)/,
     [TokenType.VAR]: /[A-Za-z]\w*/,
     [TokenType.NUM]: /(?:[0-9]*[.][0-9]+|[0-9]+)/,
     [TokenType.OP]: /[><]=|[-+*/^=<>]/,

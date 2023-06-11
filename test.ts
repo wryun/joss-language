@@ -13,6 +13,9 @@ function *get_tests() {
     let command_lineno = 0;
     for (const line of Deno.readTextFileSync(file.path).split('\n')) {
       lineno += 1;
+      if (line.startsWith('#')) {
+        continue;
+      }
       if (!line.startsWith('> ')) {
         expected += line + '\n';
         continue;

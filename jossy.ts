@@ -1,9 +1,13 @@
 export {Joss};
-export type {Result};
+export type {Result, Step};
 
 import { parse } from './parse.ts';
 import { tokenise } from './tokenise.ts';
 
+
+interface Step {
+    eval(joss: Joss): void;
+}
 
 type JossFn = ((...args: any[]) => Result);
 type Result = number | boolean | JossFn;
@@ -95,45 +99,66 @@ class Joss {
     stdout: Deno.WriterSync;
     stdin: Deno.Reader;
     arrays: Record<string, JossArray>;
-    variables: Record<string, number|boolean>;
-    functions: Record<string, JossFn>;
-    // program: object; // {1: {1: {raw, tokens}}}
+    variables: Record<string, Result>;
+    program: Record<string, Step>;
+    programParts: Record<string, string[]>;
 
     constructor(stdin: Deno.Reader, stdout: Deno.WriterSync) {
         this.stdout = stdout;
         this.stdin = stdin;
         this.variables = {};
         this.arrays = {};
-        this.functions = {};
-        // this.program = {};
+        this.program = {};
+        this.programParts = {};
     }
 
     output(s: string) {
         Deno.writeAllSync(this.stdout, new TextEncoder().encode(s));
     }
 
-    setVariable(s: string, v: number|boolean) {
+    setVariable(s: string, v: Result) {
         this.variables[s] = v;
         delete this.arrays[s];
-        delete this.functions[s];
     }
 
     setArray(s: string, indices: Array<number>, v: Result) {
         (this.arrays[s] ??= new JossArray()).set(indices, v);
         delete this.variables[s];
-        delete this.functions[s];
     }
 
-    setFunction(s: string, f: JossFn) {
-        this.functions[s] = f;
-        delete this.arrays[s];
-        delete this.functions[s];
+    setStep(part: string, stepName: string, command: Step) {
+        const fullName = `${part}.${stepName}`;
+        const previousStep = this.program[fullName];
+        this.program[fullName] = command;
+
+        if (!previousStep) {
+            // Insert into the ordered array of steps for the part
+            // so we can easily iterate over them.
+            const stepLoc = Number(fullName);
+            let i: number;
+            this.programParts[part] ??= [];
+            for (i = this.programParts[part].length; i > 0; --i) {
+                if (Number(this.programParts[part][i - 1]) < stepLoc) {
+                    break;
+                }
+                this.programParts[part][i] = this.programParts[part][i - 1];
+            }
+            this.programParts[part][i] = fullName;
+        }
+    }
+
+    getStep(part: string, stepName: string): Step {
+        return this.program[`${part}.${stepName}`];
+    }
+
+    *getPartSteps(part: string) {
+        for (const fullName of this.programParts[part]) {
+            yield this.program[fullName];
+        }
     }
 
     get(s: string): Result {
-        if (this.functions[s]) {
-            return this.functions[s];
-        } else if (this.variables[s] !== undefined) {
+        if (this.variables[s] !== undefined) {
             return this.variables[s];
         } else if (this.arrays[s]) {
             return this.arrays[s].get.bind(this.arrays[s]);
