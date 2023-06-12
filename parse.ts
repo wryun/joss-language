@@ -42,6 +42,9 @@ class Command implements Step {
             case 'Set':
                 verb = Set.parse(tokens);
                 break;
+            case 'Let':
+                verb = Let.parse(tokens);
+                break;
             case 'Do':
                 verb = Do.parse(tokens);
                 break;
@@ -70,7 +73,7 @@ class If {
 
     eval(joss: Joss): boolean {
         // TODO boolean types...
-        return Boolean(this.expression.eval(joss));
+        return Boolean(this.expression.eval(joss, {}));
     }
 
     static parse(tokens: TokenIterator<Token>): If {
@@ -99,8 +102,28 @@ interface BinaryOperator {
     fn: (a: Result, b: Result) => Result;
 }
 
+class ConditionalExpression implements Expression {
+    conditionResults: {condition: Expression, result: Expression}[] = [];
+    result: Expression;
+    
+    constructor(conditionResults: {condition: Expression, result: Expression}[], result: Expression) {
+        this.result = result;
+        this.conditionResults = conditionResults;
+    }
+
+    eval(joss: Joss, fnArgs: Record<string, Result>): Result {
+        for (const {condition, result} of this.conditionResults) {
+            if (Boolean(condition.eval(joss, fnArgs))) {
+                return result.eval(joss, fnArgs);
+            }
+        }
+
+        return this.result.eval(joss, fnArgs);
+    }
+}
+
 abstract class Expression {
-    abstract eval(joss: Joss): Result;
+    abstract eval(joss: Joss, fnArgs: Record<string, Result>): Result;
 
     static parse(tokens: TokenIterator<Token>): Expression {
         return this.parse_binary(tokens, this.parse_unary(tokens));
@@ -114,11 +137,26 @@ abstract class Expression {
                 return NumberExpression.parse(tokens);
             case TokenType.VAR:
                 return VariableExpression.parse(tokens);
-            case TokenType.PAREN:
-                expect('Invalid parenthesis', tokens.next(), TokenType.PAREN, '(');
-                result = this.parse_binary(tokens, this.parse_unary(tokens));
-                expect('Invalid parenthesis', tokens.next(), TokenType.PAREN, ')');
-                return result;
+            case TokenType.OPEN_BRACKET: {
+                const conditionResults: {condition: Expression, result: Expression}[] = [];
+                tokens.next();
+                result = Expression.parse(tokens);
+                while (tokens.peek().type === TokenType.COLON) {
+                    tokens.next();
+
+                    // i.e. it wasn't a result, it was a condition... confusing.
+                    conditionResults.push({condition: result, result: Expression.parse(tokens)});
+                    expect('expression for default condition', tokens.next(), TokenType.SEMICOLON);
+                    result = Expression.parse(tokens);
+                }
+                expect('Invalid parenthesis', tokens.next(), TokenType.CLOSE_BRACKET, token.raw === '[' ? ']' : ')');
+
+                if (conditionResults.length > 0) {
+                    return new ConditionalExpression(conditionResults, result);
+                } else {
+                    return result;
+                }
+            }
             default:
                 throw new Error(`Unexpected token in numeric expression: got '${token.raw}'`);
         }
@@ -129,7 +167,7 @@ abstract class Expression {
     static BINARY_OPERATORS: Record<string, BinaryOperator> = {
         'or': {prec: 0, fn: (a, b) => Boolean(a) && Boolean(b)},
         'and': {prec: 1, fn: (a, b) => Boolean(a) && Boolean(b)},
-        '==': {prec: 2, fn: (a, b) => a == b},
+        '=': {prec: 2, fn: (a, b) => a == b},
         '!=': {prec: 2, fn: (a, b) => a != b},
         '<': {prec: 3, fn: (a, b) => Number(a) < Number(b)},
         '>': {prec: 3, fn: (a, b) => Number(a) > Number(b)},
@@ -167,15 +205,15 @@ class VariableExpression implements Expression {
     v: string;
     indices: Expression[];
 
-    constructor(v: string, indices: Array<Expression>) {
+    constructor(v: string, indices: Expression[] = []) {
         this.v = v;
         this.indices = indices;
     }
 
-    eval(joss: Joss): Result {
-        const res = joss.get(this.v);
+    eval(joss: Joss, fnArgs: Record<string, Result>): Result {
+        const res = fnArgs[this.v] ?? joss.get(this.v);
         if (res instanceof Function && this.indices.length > 0) {
-            return res(...this.indices.map(i => i.eval(joss)));
+            return res(...this.indices.map(i => i.eval(joss, fnArgs)));
         } else {
             return res;
         }
@@ -183,7 +221,7 @@ class VariableExpression implements Expression {
 
     eval_set(joss: Joss, value: Result) {
         if (this.indices.length > 0) {
-            joss.setArray(this.v, this.indices.map(i => Number(i.eval(joss))), value);
+            joss.setArray(this.v, this.indices.map(i => Number(i.eval(joss, {}))), value);
         } else {
             joss.setVariable(this.v, value);
         }
@@ -194,9 +232,11 @@ class VariableExpression implements Expression {
         const indices: Array<Expression> = [];
 
         let token = tokens.peek();
-        if (!(token.type === TokenType.PAREN && token.raw === '(')) {
+        if (!(token.type === TokenType.OPEN_BRACKET)) {
             return new VariableExpression(v, indices);
         }
+
+        const expectedBracket = token.raw === '[' ? ']' : ')';
 
         tokens.next();
 
@@ -204,10 +244,10 @@ class VariableExpression implements Expression {
             indices.push(Expression.parse(tokens));
 
             token = tokens.next();
-            if (token.raw === ')') {
+            if (token.raw === expectedBracket) {
                 break;
             }
-            expect('matrix index', token, TokenType.COMMA);
+            expect('variable argument', token, TokenType.COMMA);
         }
 
         return new VariableExpression(v, indices);
@@ -221,7 +261,7 @@ class NumberExpression implements Expression {
         this.num = num;
     }
 
-    eval(joss: Joss): number {
+    eval(joss: Joss, fnArgs: Record<string, Result>): number {
         return this.num;
     }
 
@@ -241,8 +281,8 @@ class BinaryExpression implements Expression {
         this.rhs = rhs;
     }
 
-    eval(joss: Joss): Result {
-        return this.fn(this.lhs.eval(joss), this.rhs.eval(joss));
+    eval(joss: Joss, fnArgs: Record<string, Result>): Result {
+        return this.fn(this.lhs.eval(joss, fnArgs), this.rhs.eval(joss, fnArgs));
     }
 }
 
@@ -254,7 +294,7 @@ class Maths implements StringExpression {
     }
 
     eval(joss: Joss): string {
-        return this.expression.eval(joss).toString();
+        return this.expression.eval(joss, {}).toString();
     }
 
     static parse(tokens: TokenIterator<Token>): Maths {
@@ -298,7 +338,58 @@ class Set implements Verb {
     }
 
     eval(joss: Joss): void {
-        this.target.eval_set(joss, this.expression.eval(joss));
+        this.target.eval_set(joss, this.expression.eval(joss, {}));
+    }
+}
+
+class Let implements Verb {
+    target: VariableExpression;
+    argNames: string[];
+    expression: Expression;
+
+    constructor(target: VariableExpression, argNames: string[], expression: Expression) {
+        this.expression = expression;
+        this.target = target;
+        this.argNames = argNames;
+    }
+
+    eval(joss: Joss): void {
+        this.target.eval_set(joss, (...args: any[]) => {
+            if (args.length !== this.argNames.length) {
+                throw new Error('Invalid arity on function call');
+            }
+            const fnArgs = args.reduce((o, arg, i) => {
+                o[this.argNames[i]] = arg;
+                return o;
+            }, {});
+
+            return this.expression.eval(joss, fnArgs);
+        });
+    }
+
+    static parse(tokens: TokenIterator<Token>): Set {
+        const v = tokens.next().raw;
+
+        let token = tokens.peek();
+        const argNames: string[] = [];
+        if (token.type === TokenType.OPEN_BRACKET) {
+            tokens.next();
+            const expectedBracket = token.raw === '[' ? ']' : ')';
+
+            while (true) {
+                token = expect('variable name', tokens.next(), TokenType.VAR);
+                argNames.push(token.raw);
+                if (tokens.peek().type === TokenType.CLOSE_BRACKET) {
+                    break;
+                }
+                expect('next variable argument', token, TokenType.COMMA);
+            }
+            expect('end of function arguments', tokens.next(), TokenType.CLOSE_BRACKET, expectedBracket);
+        }
+
+        expect('after set variable', tokens.next(), TokenType.OP, '=');
+
+        return new Let(new VariableExpression(v), argNames, Expression.parse(tokens));
     }
 }
 
@@ -315,7 +406,7 @@ class Type implements Verb {
         [TokenType.NUM]: Maths.parse,
         [TokenType.OP]: Maths.parse,
         [TokenType.STR]: QuotedString.parse,
-        [TokenType.PAREN]: Maths.parse,
+        [TokenType.OPEN_BRACKET]: Maths.parse,
     };
 
     static parse(tokens: TokenIterator<Token>): Type {
@@ -348,29 +439,29 @@ class Type implements Verb {
 }
 
 class ValueRange {
-    generators: ((joss: Joss) => Generator<Result>)[];
+    generators: ((joss: Joss, fnArgs: Record<string, Result>) => Generator<Result>)[];
 
     constructor() {
         this.generators = [];
     }
 
-    *eval(joss: Joss) {
+    *eval(joss: Joss, fnArgs: Record<string, Result>) {
         for (const g of this.generators) {
-            yield* g(joss);
+            yield* g(joss, fnArgs);
         }
     }
 
     addSingleValueGenerator(e: Expression) {
-        this.generators.push(function *(joss: Joss) {
-            yield e.eval(joss);
+        this.generators.push(function *(joss: Joss, fnArgs: Record<string, Result>) {
+            yield e.eval(joss, fnArgs);
         });
     }
 
     addRangeGenerator(start: Expression, step: Expression, end: Expression) {
-        this.generators.push(function *(joss: Joss) {
-            const endval = Number(end.eval(joss));
-            const stepval = Number(step.eval(joss));
-            for (let i = Number(start.eval(joss)); i < endval; i += stepval) {
+        this.generators.push(function *(joss: Joss, fnArgs: Record<string, Result>) {
+            const endval = Number(end.eval(joss, fnArgs));
+            const stepval = Number(step.eval(joss, fnArgs));
+            for (let i = Number(start.eval(joss, fnArgs)); i < endval; i += stepval) {
                 yield i;
             }
         });
@@ -387,9 +478,9 @@ class ValueRange {
             if (token.raw === ',') {
                 vr.addSingleValueGenerator(start);
                 start = Expression.parse(tokens);
-            } else if (token.raw === '(') {
+            } else if (token.type === TokenType.OPEN_BRACKET) {
                 const step = Expression.parse(tokens);
-                expect('end of step in range', tokens.next(), TokenType.PAREN, ')');
+                expect('end of step in range', tokens.next(), TokenType.CLOSE_BRACKET, token.raw === '[' ? ']' : ')');
                 const end = Expression.parse(tokens);
                 vr.addRangeGenerator(start, step, end);
                 start = end;
@@ -427,11 +518,11 @@ class Do implements Verb {
 
     eval(joss: Joss): void {
         if (this.times) {
-            for (let i = 0; i < Number(this.times.eval(joss)); ++i) {
+            for (let i = 0; i < Number(this.times.eval(joss, {})); ++i) {
                 this.evalDo(joss);
             }
         } else if (this.for) {
-            for (const v of this.for.range.eval(joss)) {
+            for (const v of this.for.range.eval(joss, {})) {
                 joss.setVariable(this.for.s, v);
                 this.evalDo(joss);
             }

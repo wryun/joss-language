@@ -5,12 +5,12 @@ import { parse } from './parse.ts';
 import { tokenise } from './tokenise.ts';
 
 
+type JossFn = ((...args: any[]) => Result);
+type Result = number | boolean | JossFn;
+
 interface Step {
     eval(joss: Joss): void;
 }
-
-type JossFn = ((...args: any[]) => Result);
-type Result = number | boolean | JossFn;
 
 
 const FUNCTIONS: Record<string, JossFn> = {
