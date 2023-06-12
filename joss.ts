@@ -1,7 +1,7 @@
 export {Joss};
 export type {Result, Step};
 
-import { parse } from './parse.ts';
+import { parse } from './command.ts';
 import { tokenise } from './tokenise.ts';
 
 

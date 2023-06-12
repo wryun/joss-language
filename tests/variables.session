@@ -1,0 +1,12 @@
+> Set x = 3.
+> Type x.
+3
+> Set y = 3 + 4.
+> Type y.
+7
+> Set y(2) = 4 + 4.
+> Type y(2).
+8
+> Set y(2, x) = 1.
+> Type y(2, 3).
+1

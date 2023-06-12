@@ -1,0 +1,27 @@
+> 1.1 Set x = 3.
+> 1.2 Type x.
+> 1.3 Type x + 1.
+> Do step 1.1.
+> Do step 1.2.
+3
+> Do part 1.
+3
+4
+> Do step 1.2 for x = 1(x)10(2)15, 20.
+1
+4
+7
+10
+12
+14
+15
+20
+# So, should x go back to the old value before the for? Hmm.
+# There's an example in the reference manual where setting the global
+# inside is 'undone' by the for, so it's definitely a global.
+> Type x.
+20
+> Do step 1.2, 3 times.
+20
+20
+20
