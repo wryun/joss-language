@@ -2,7 +2,7 @@
 > Type 2 * 2 * 2.
 8
 > Type sin(1.5707963).
-0.9999999999999997
+1
 > Type sqrt(sin(1) * sin(1) + cos(1) * cos(1)).
 1
 > Set x = 3.

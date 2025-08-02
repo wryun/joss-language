@@ -99,7 +99,11 @@ class Maths implements StringExpression {
     }
 
     eval(joss: Joss): string {
-        return this.expression.eval(joss, {}).toString();
+        const result = this.expression.eval(joss, {});
+        if (typeof result === 'number') {
+            return parseFloat(result.toPrecision(9)).toString();
+        }
+        return result.toString();
     }
 
     static parse(tokens: TokenIterator<Token>): Maths {
