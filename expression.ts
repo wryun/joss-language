@@ -29,6 +29,18 @@ class ConditionalExpression implements Expression {
     }
 }
 
+class NegationExpression implements Expression {
+    expr: Expression;
+
+    constructor(expr: Expression) {
+        this.expr = expr;
+    }
+
+    eval(joss: Joss, fnArgs: Record<string, Result>): Result {
+        return -Number(this.expr.eval(joss, fnArgs));
+    }
+}
+
 abstract class Expression {
     abstract eval(joss: Joss, fnArgs: Record<string, Result>): Result;
 
@@ -44,6 +56,12 @@ abstract class Expression {
                 return NumberExpression.parse(tokens);
             case TokenType.VAR:
                 return VariableExpression.parse(tokens);
+            case TokenType.OP:
+                if (token.raw === '-') {
+                    tokens.next(); // consume the minus
+                    return new NegationExpression(this.parse_unary(tokens));
+                }
+                throw new Error(`Unexpected operator in unary position: got '${token.raw}'`);
             case TokenType.OPEN_BRACKET: {
                 const conditionResults: {condition: Expression, result: Expression}[] = [];
                 tokens.next();

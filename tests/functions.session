@@ -1,7 +1,7 @@
 > Let v(y) = (y < 0: y - 1; y + 1).
 > Type v(2).
 3
-> Type v(0-2).
+> Type v(-2).
 -3
 > Let f(x) = [ x=0 : 1; x*f(x-1) ].
 > Type f(0).

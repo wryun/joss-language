@@ -9,7 +9,7 @@
 3
 > Type fp(3.7).
 0.7000000000000002
-> Type sgn(0-5), sgn(0), sgn(5).
+> Type sgn(-5), sgn(0), sgn(5).
 -1
 0
 1
