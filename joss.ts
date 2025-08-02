@@ -3,6 +3,7 @@ export type {Result, Step};
 
 import { parse } from './command.ts';
 import { tokenise } from './tokenise.ts';
+import { TerminateProgramException } from './exceptions.ts';
 
 
 type JossFn = ((...args: any[]) => Result);
@@ -106,6 +107,7 @@ class Joss {
     variables: Record<string, Result>;
     program: Record<string, Step>;
     programParts: Record<string, string[]>;
+    inStoredProgram: boolean;
 
     constructor(stdin: NodeJS.ReadableStream, stdout: Writer) {
         this.stdout = stdout;
@@ -114,6 +116,7 @@ class Joss {
         this.arrays = {};
         this.program = {};
         this.programParts = {};
+        this.inStoredProgram = false;
     }
 
     output(s: string) {
@@ -180,6 +183,13 @@ class Joss {
     }
 
     private eval_line(s: string) {
-        parse(tokenise(s)).eval(this);
+        try {
+            parse(tokenise(s)).eval(this);
+        } catch (e) {
+            if (e instanceof TerminateProgramException) {
+                return;
+            }
+            throw e;
+        }
     }
 }

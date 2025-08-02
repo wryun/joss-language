@@ -4,6 +4,7 @@ import { Token, TokenType, TokenIterator } from './tokenise.ts';
 import { Joss, Step } from './joss.ts';
 import { expect } from './parse_helpers.ts';
 import { Expression, VariableExpression, ValueRange } from './expression.ts';
+import { TerminateProgramException } from './exceptions.ts';
 
 class Command implements Step {
     verb: Verb;
@@ -41,6 +42,9 @@ class Command implements Step {
                 break;
             case 'Do':
                 verb = Do.parse(tokens);
+                break;
+            case 'To':
+                verb = To.parse(tokens);
                 break;
             default:
                 throw new Error(`${token.raw} is not a command`);
@@ -262,12 +266,18 @@ class Do implements Verb {
 
     // i.e. eval without modifier.
     evalDo(joss: Joss): void {
-        if (this.step) {
-            joss.getStep(this.part, this.step).eval(joss);
-        } else {
-            for (const step of joss.getPartSteps(this.part)) {
-                step.eval(joss);
+        const wasInStoredProgram = joss.inStoredProgram;
+        joss.inStoredProgram = true;
+        try {
+            if (this.step) {
+                joss.getStep(this.part, this.step).eval(joss);
+            } else {
+                for (const step of joss.getPartSteps(this.part)) {
+                    step.eval(joss);
+                }
             }
+        } finally {
+            joss.inStoredProgram = wasInStoredProgram;
         }
     }
 
@@ -326,6 +336,46 @@ class Do implements Verb {
         }
 
         return doVerb;
+    }
+}
+
+class To implements Verb {
+    part: string;
+    step: string | null;
+
+    constructor(part: string, step: string | null = null) {
+        this.part = part;
+        this.step = step;
+    }
+
+    eval(joss: Joss): void {
+        if (!joss.inStoredProgram) {
+            throw new Error('To command can only be used in stored programs');
+        }
+        if (this.step) {
+            joss.getStep(this.part, this.step).eval(joss);
+        } else {
+            for (const step of joss.getPartSteps(this.part)) {
+                step.eval(joss);
+            }
+        }
+        throw new TerminateProgramException();
+    }
+
+    static parse(tokens: TokenIterator<Token>): To {
+        let token = tokens.next();
+        switch (token.raw) {
+            case 'step':
+                token = expect('step number', tokens.next(), TokenType.NUM);
+                break;
+            case 'part':
+                token = expect('part number', tokens.next(), TokenType.NUM);
+                break;
+            default:
+                throw new Error('Expecting step or part after To');
+        }
+        const [part, step] = token.raw.split('.');
+        return new To(part, step || null);
     }
 }
 
