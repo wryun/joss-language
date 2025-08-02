@@ -1,0 +1,19 @@
+# Test advanced loop constructs with Do command
+> Set sum = 0.
+> Type sum.
+0
+> 1.1 Set sum = sum + i.
+> 1.2 Type sum.
+> Do part 1 for i = 1(1)5.
+1
+3
+6
+10
+15
+> Type sum.
+15
+> 2.1 Type "Loop iteration".
+> Do part 2, 3 times.
+Loop iteration
+Loop iteration
+Loop iteration

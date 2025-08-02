@@ -1,7 +1,7 @@
 export {parse};
 
 import { Token, TokenType, TokenIterator } from './tokenise.ts';
-import { Joss, Result, Step } from './joss.ts';
+import { Joss, Step } from './joss.ts';
 import { expect } from './parse_helpers.ts';
 import { Expression, VariableExpression, ValueRange } from './expression.ts';
 
@@ -114,7 +114,7 @@ class QuotedString implements StringExpression {
         this.val = val;
     }
 
-    eval(joss: Joss): string {
+    eval(_joss: Joss): string {
         return this.val;
     }
 

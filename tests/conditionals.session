@@ -1,0 +1,11 @@
+# Test conditional expressions and boolean operations  
+> Type [5 > 3: 1; 0].
+1
+> Type [2 > 5: 1; 0].
+0
+> Set x = 10.
+> Type [x > 5: x * 2; x / 2].
+20
+> Set x = 3.
+> Type [x > 5: x * 2; x / 2].
+1.5

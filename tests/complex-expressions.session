@@ -1,0 +1,13 @@
+# Test complex mathematical expressions
+> Type 2 * 2 * 2.
+8
+> Type sin(1.5707963).
+0.9999999999999997
+> Type sqrt(sin(1) * sin(1) + cos(1) * cos(1)).
+1
+> Set x = 3.
+> Set y = 4.
+> Type sqrt(x * x + y * y).
+5
+> Type (1 + 2) * (3 + 4).
+21

@@ -168,7 +168,7 @@ class NumberExpression implements Expression {
         this.num = num;
     }
 
-    eval(joss: Joss, fnArgs: Record<string, Result>): number {
+    eval(_joss: Joss, _fnArgs: Record<string, Result>): number {
         return this.num;
     }
 

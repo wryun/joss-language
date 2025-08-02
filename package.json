@@ -1,0 +1,17 @@
+{
+  "name": "joss-language",
+  "version": "1.0.0",
+  "description": "WIP Reimplementation of MATH(JOSS) in TypeScript",
+  "main": "joss.ts",
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "start": "bun run joss.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

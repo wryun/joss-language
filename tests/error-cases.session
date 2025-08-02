@@ -1,0 +1,7 @@
+# Test basic variable operations
+> Set x = 5.
+> Type x.
+5
+> Set z = x + 10.
+> Type z.
+15

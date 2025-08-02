@@ -95,15 +95,19 @@ class JossArray {
 }
 
 
+interface Writer {
+    write(chunk: Uint8Array): void;
+}
+
 class Joss {
-    stdout: Deno.WriterSync;
-    stdin: Deno.Reader;
+    stdout: Writer;
+    stdin: NodeJS.ReadableStream;
     arrays: Record<string, JossArray>;
     variables: Record<string, Result>;
     program: Record<string, Step>;
     programParts: Record<string, string[]>;
 
-    constructor(stdin: Deno.Reader, stdout: Deno.WriterSync) {
+    constructor(stdin: NodeJS.ReadableStream, stdout: Writer) {
         this.stdout = stdout;
         this.stdin = stdin;
         this.variables = {};
@@ -113,7 +117,7 @@ class Joss {
     }
 
     output(s: string) {
-        Deno.writeAllSync(this.stdout, new TextEncoder().encode(s));
+        this.stdout.write(new TextEncoder().encode(s));
     }
 
     setVariable(s: string, v: Result) {
@@ -171,13 +175,8 @@ class Joss {
 
     eval(s: string) {
         for (const input of s.split('\n')) {
-            this.eval_input_line(input);
+            this.eval_line(input);
         }
-    }
-
-    private eval_input_line(s: string) {
-        // check if it starts with a number; if so, place in program... (and parse)
-        this.eval_line(s);
     }
 
     private eval_line(s: string) {

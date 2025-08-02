@@ -1,0 +1,27 @@
+# Test built-in mathematical functions
+> Type sqrt(16).
+4
+> Type sin(0).
+0
+> Type cos(0).
+1
+> Type ip(3.7).
+3
+> Type fp(3.7).
+0.7000000000000002
+> Type sgn(0-5), sgn(0), sgn(5).
+-1
+0
+1
+> Type min(5, 2, 8, 1).
+1
+> Type max(5, 2, 8, 1).
+8
+> Type sum(1, 2, 3, 4).
+10
+> Type prod(2, 3, 4).
+24
+> Type exp(0).
+1
+> Type log(1).
+0

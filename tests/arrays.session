@@ -1,0 +1,21 @@
+# Test array operations and multi-dimensional arrays
+> Set a(1) = 10.
+> Type a(1).
+10
+> Set a(2) = 20.
+> Type a(1), a(2).
+10
+20
+> Set matrix(1,1) = 5.
+> Set matrix(1,2) = 10.
+> Set matrix(2,1) = 15.
+> Set matrix(2,2) = 20.
+> Type matrix(1,1), matrix(1,2).
+5
+10
+> Type matrix(2,1), matrix(2,2).
+15
+20
+> Set cube(1,2,3) = 123.
+> Type cube(1,2,3).
+123
