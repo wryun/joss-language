@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="joss.css">
+    <title>MATH(JOSS) - Chapter 3: General Points</title>
+</head>
+<body>
+
+<div class="page">
+    <div class="page-number">12</div>
+    
+    <h1>III. General Points</h1>
+    
+    <h2>Rules of Form</h2>
+    
+    <p>MATH(JOSS) commands are written as normal English imperative sentences: capitalization of first word, proper spelling and word spacing, final period. There can be only one command per line, which MATH "considers" only after you strike the carrier RETURN button. A command is executed completely or not at all. In typing mathematical expressions, spaces may be used freely, except within numbers and between the name of any function, formula, or array and the left parenthesis.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+10.</span>
+        2+10 =          12</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">type 2+2.</span>
+Eh?</div>
+        <div class="comment-column">
+            Initial capital omitted.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+2</span>
+Eh?</div>
+        <div class="comment-column">
+            Final period missing.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type2+2.</span>
+Eh?</div>
+        <div class="comment-column">
+            No space.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Tpye 2+2.</span>
+Eh?</div>
+        <div class="comment-column">
+            Misspelling.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type (2+2·3.</span>
+Eh?</div>
+        <div class="comment-column">
+            Unpaired parenthesis.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2.2.3.</span>
+Eh?</div>
+        <div class="comment-column">
+            Period instead of multiply.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type sin (4.7).</span>
+Eh?</div>
+        <div class="comment-column">
+            Space following function name.
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+l0.</span>
+Eh?</div>
+        <div class="comment-column">
+            "Ell" instead of "one."
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+1O.</span>
+Eh?</div>
+        <div class="comment-column">
+            "Oh" instead of "zero."
+        </div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+1 0.</span>
+Eh?</div>
+        <div class="comment-column">
+            Space within number.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">13</div>
+    
+    <h2>Precedence Rules</h2>
+    
+    <p>MATH follows conventional rules in determining the order of operations: exponentiation first, followed by multiplication and division, and then by addition and subtraction. Parentheses, of course, can alter precedence rules, and in fact, in complicated cases, the best advice is to be liberal with parentheses and do a sample side calculation on MATH, using numbers, to see if you are getting what you want. Many good programs have foundered for lack of attention to precedence.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type -2*2.</span>
+        -2*2 =          -4</div>
+        <div class="comment-column">-2²</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 1+1/2.</span>
+        1+1/2 =         1.5</div>
+        <div class="comment-column">1+(1/2)</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type (1+1)/2.</span>
+        (1+1)/2 =       1</div>
+        <div class="comment-column">1+1
+―――
+ 2</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 1/2+1.</span>
+        1/2+1 =         1.5</div>
+        <div class="comment-column">(1/2)+1</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 1/3·3.</span>
+        1/3·3 =         .999999999</div>
+        <div class="comment-column">(1/3)·3</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2*3*2.</span>
+        2*3*2 =         64</div>
+        <div class="comment-column">(2³)²</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2*(3*2).</span>
+        2*(3*2) =       512</div>
+        <div class="comment-column">2<sup>3<sup>2</sup></sup></div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2*3·4+5.</span>
+        2*3·4+5 =       37</div>
+        <div class="comment-column">(2³·4)+5</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">14</div>
+    
+    <h2>Editing</h2>
+    
+    <p>Line editing may be done prior to striking carrier return, even if the final period has been typed. You may backspace, overtype, and use # to blank out unwanted characters. Backspacing or forward spacing does not blank out characters. An asterisk at the beginning or end of a line will tell MATH upon carrier return to ignore the entire line. The MATH line may have 100 characters, but it is usually wise to keep lines short, say by abbreviations, to avoid extensive retyping of lines later found to be in error or to require modification.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2.0# + 52.77.</span>
+2.07 + 52.71 =         54.78</div>
+        <div class="comment-column">Backspace--overstrike corrections.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type#2+2.</span>
+        2+2 =           4</div>
+        <div class="comment-column"># used to blank out.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+2 *</span></div>
+        <div class="comment-column">* at end causes line to be ignored.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 2+2.</span>
+Type 2#+2.
+Sorry. Say again:</div>
+        <div class="comment-column"># indicates transmission error.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">15</div>
+    
+    <h2>Values</h2>
+    
+    <p>Numerical or logical values may be assigned to any of the 52 uppercase and lowercase letters that MATH uses for identifiers. Values may be organized into arrays by using indexed letters (page 19). Letters may also be assigned arbitrary expressions called formulas (page 36); see also page 33), but every name may only one value, array, or formula at a time, a new definition replacing the old.</p>
+    
+    <p>MATH carries decimal values in the range ±10⁻⁶³ to ±9.9999999·10⁶³ with nine digits of significance. Values less than 10⁻⁶³ are replaced by zero.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Set x=3.</span>
+<span class="user-input">Type x*x, x*x.</span>
+        x*x =           9
+        x*x =           27</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type volts.</span>
+Eh?</div>
+        <div class="comment-column">Single letter identifiers only.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">a(1)=4
+a(2)=7</span>
+<span class="user-input">Type a.</span>
+        a(1) =          4
+        a(2) =          7</div>
+        <div class="comment-column">Arrays may have 1 to 10 indices.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 10*(-100).</span>
+        10*(-100) =     0
+<span class="user-input">Type 10*100.</span>
+I have an overflow.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">b(1)=true
+b(2)=1&lt;x&lt;100.</span>
+<span class="user-input">Type b.</span>
+        b(1) =          true
+        b(2) =          false</div>
+        <div class="comment-column">Logical values too.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">16</div>
+    
+    <h2>Direct and Stored Commands</h2>
+    
+    <p>MATH commands are given in one of two ways. A direct command begins with a MATH verb and is executed immediately (directly) upon carrier return. If the command begins with a number -- the step number -- it will be stored for later execution. This is the stored command, also called the "indirect" command. A sequence of numbered commands forms a stored program in MATH, to be executed when desired by a direct command. Steps are stored in the sequence given by increasing step numbers (e.g., 1.05, 1.1, 1.19, 1.3), which need not be consecutive. MATH reorders your input according to these step numbers, regardless of the order of inputting. (Note that 1.19 precedes 1.3)</p>
+    
+    <p>A sequence of steps with the same number to the left of the decimal is called a part, identified by that integral number (e.g., part 7). The first step of a part may be labeled with an integer, but then it will not be possible sub-sequently to insert a new step before it. It is good practice to begin with, say 1.1. A stored step will be deleted and replaced by a new input step with the same number. This automatic replacement is general in MATH, applying to letters and definitions.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type 2+2.</span></div>
+        <div class="comment-column">Stored (indirect) command.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do step 1.1.</span>
+        2+2 =           4</div>
+        <div class="comment-column">Direct command.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.2 Type 3·4.
+1.05 Type 5/6.</span></div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type all.</span>
+
+1.05 Type 5/6.
+1.1 Type 2+2.
+1.2 Type 3·4.</div>
+        <div class="comment-column">Steps ordered by step number.</div>
+    </div>
+    <div class="code-block"><span class="user-input">2.1 Type 4*5.</span></div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.2 Type 3·4·5·6.</span></div>
+        <div class="comment-column">Replaces previous step 1.2.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type part 1.</span>
+
+1.05 Type 5/6.
+1.1 Type 2+2.
+1.2 Type 3·4·5·6.
+
+<span class="user-input">Type part 2.</span>
+2.1 Type 4*5.</div>
+        <div class="comment-column">Steps are stored in order of step number.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">17</div>
+    
+    <h2>Order of Program Execution</h2>
+    
+    <p>The part is the major unit of program execution. When commanded to do a part, MATH follows the step sequence within that part, unless directed by a step to go to some place (a step or part) other than the next step. For the verbs that change this order of computation, see Do, To, Done, Quit. Otherwise MATH will not move automatically to a next part. A program can be started by executing a part with any number. However, most people start with part 1, viewing it as something like an executive routine controlling the whole program.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type "a".
+1.2 Type "b".
+1.3 Type "c".
+
+2.1 Type "d".
+2.2 Type "e".</span></div>
+        <div class="comment-column">See page 37 for use of quotes.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part 1.</span>
+a
+b
+c</div>
+        <div class="comment-column">Part 1 execution.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part 2.</span>
+d
+e</div>
+        <div class="comment-column">Part 2 execution.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.25 To step 2.2.</span></div>
+        <div class="comment-column">Step inserted in part 1.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part 1.</span>
+a
+b</div>
+        <div class="comment-column">Note that c and d do not appear.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">18</div>
+    
+    <h2>Value Ranges</h2>
+    
+    <p>Range of value expressions are used in for phrases and in special functions (page 51):</p>
+    
+    <dl>
+        <dt>x = a,b,c</dt>
+        <dd>
+            means take values a,b, and then c for x.
+        </dd>
+        <dt>x = a(b)c</dt>
+        <dd>
+            means take values for x from a to c in steps of b.
+        </dd>
+        <dt>x = a,b(c)d(e)f,g</dt>
+        <dd>
+            means that x will be given successively the values
+            a,b,b+c,b+2c,...,d,d+e,d+2e,...,f,g.
+        </dd>
+    </dl>
+    
+    <p>Note that there is no comma between b(c) and d, since d is the last value for the subrange b(c)d and the first value in the subrange d(e)f. If b+nc&lt;d and b+(n+1)c≥d, the subrange will terminate with ...b+nc,d. Then the values d+e,d+2e,...,f, and finally g will be used.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">a=3
+1.1 Type i.</span></div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part 1 for i=1(1)3(a)a*2.</span>
+        i =             1
+        i =             2
+        i =             3
+        i =             6
+        i =             9</div>
+        <div class="comment-column">Note that expressions may be used.</div>
+    </div>
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part 1 for i=0(1/a)1.</span>
+        i =             0
+        i =             .333333333
+        i =             .666666666
+        i =             .999999999
+        i =             1</div>
+        <div class="comment-column">End of range is always hit exactly.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">19</div>
+    
+    <h2>Arrays</h2>
+    
+    <p>Values may be stored in places named by indexed letters. These arrays may range up to ten indices whose values must be integers in the closed range -250 to +250. A letter may have only one dimension at a time; thus if you have already stored values for a(2,1) and a(3,4) and request that a(2,3,1) be given a value, a nonindexed letter "a" will also be erased. Letters so indexed are used to represent vectors and matrices of any dimension up to 10.</p>
+    
+    <p>Indexing also plays the role of subscripting, to give greater freedom in naming than that provided by the 52 uppercase and lowercase letters of the alphabet. These uses may be mixed so that the first index stands for a subscript, and those following stand for the array; e.g., a₁(j,k) becomes a(1,j,k) in MATH. Unlike FORTRAN, MATH does not reserve storage space for arrays according to "dimension" statements, but stores only specified values. (See also page 41.)</p>
+    
+    <div class="code-block"><span class="user-input">Set a(251)=3.</span>
+Index value must be integer and |index|≤250.
+
+<span class="user-input">Set a(1,2,3,4,5,6,7,8,9,8,7)=5.</span>
+Please limit number of indices to 10.
+
+<span class="user-input">Set a(2,1)=5.
+Set a(3,4)=10.</span>
+
+<span class="user-input">Type a(3,4).</span>
+        a(3,4) =        10</div>
+
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type a.</span>
+        a(2,1) =        5
+        a(3,4) =        10</div>
+        <div class="comment-column">
+            Note that entire array is typed.
+        </div>
+    </div>
+
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Set a(2,3,1)=7.</span>
+<span class="user-input">Type a.</span>
+        a(2,3,1) =      7</div>
+        <div class="comment-column">
+            Old array replaced because of dimension change.
+        </div>
+    </div>
+
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">a=3</span>
+<span class="user-input">Type a.</span>
+        a =             3</div>
+        <div class="comment-column">
+            Array replaced by scalar.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">20</div>
+    
+    <h2>Summary of Ranges</h2>
+    
+    <p>The examples below show, by MATH error messages, the limitations on step, part, form numbers, values, and indices. These ranges may be exceeded inadvertently, since values may be generated by the program.</p>
+    
+    <div class="code-block"><span class="user-input">1.234567876543 Set x=3.</span>
+Please limit step labels to 9 significant digits.
+
+<span class="user-input">Type 1234.56789876.</span>
+Please limit numbers to 9 significant digits.
+
+<span class="user-input">Set a(2345)=-17.</span>
+Index value must be integer and |index|≤250.
+
+<span class="user-input">Do part 10*63.</span>
+Part number must be integer and 1≤part&lt;10*9.
+
+<span class="user-input">Do step 10*63.</span>
+Step number must satisfy 1≤step&lt;10*9.
+
+<span class="user-input">Type form 5.3.</span>
+Form number must be integer and 1≤form&lt;10*9.</div>
+
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type 10*100.</span>
+I have an overflow.</div>
+        <div class="comment-column">Range is ±10<sup>-63</sup> to ±9.9999999·10<sup>63</sup>.</div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">21</div>
+    
+    <h2>Files</h2>
+    
+    <p>Your long-term files are held on IBM 2314 or 2311 magnetic disks. Each IBM disk pack has a capacity of 16,000 "spaces". A space is roughly equivalent to about 150 MATH cells (See page 39). The MATH disks will hold any number of private files, each with an almost unlimited number of items. However, the total number of available disks and the maximum number of spaces you are permitted to use are parameters set by computer center authorities. The number of "spaces" an item occupies is indicated in the SPACE column of your file summary (See page 45). If required, your "space" limit can be raised.</p>
+    
+    <h2>Bugs and Failures</h2>
+    
+    <p>Bugs, those hard-to-find errors that prevent a program from working properly, fall into two major categories. First, the overall flow logic of the program itself may be in error. It is always good practice and discipline to go through the program manually using a few initial values from ranges. In writing this out, the program steps are recorded according to the way MATH will execute them, including iterations. You should also do sections of a program on MATH itself. Second, very subtle errors caused by rounding, accumulation of errors, very large values, or values close to zero may arise. You should always know enough about your problem, through previous hand calculation or other means, to detect gross output errors. But for subtle ones, the best advice is, THINK and then consult a numerical analysis manual or a Mathmeister.</p>
+    
+    <p>Failures of hardware or software can and do occur. If you log back onto MATH, but do not get the <em>I'm getting your work from your previous session.</em> message, the failure has lead to the loss of your program.</p>
+</div>
+
+<div class="page">
+    <div class="page-number">22</div>
+    
+    <h2>Error Messages</h2>
+    
+    <p>With one major exception MATH error messages are on the whole self-explanatory and directly to the point. The exception is <em>Eh?</em>. It would be difficult to flag all such errors individually.</p>
+    
+    <p><em>Eh?</em> Check List:</p>
+    <ol>
+        <li>Not typed properly.(See page 12.)</li>
+        <li>Words used not in MATH vocabulary.</li>
+        <li>Mathematical formatting errors (most frequently a missing multiplication dot or right-hand parenthesis).</li>
+        <li>A space between function, formula, or array name and left parenthesis.</li>
+        <li>Use of "ell" instead of one, "oh" instead of zero, "period" instead of dot.</li>
+        <li>Attaching a for phrase to verb other than Do.</li>
+        <li>Typewriter error in sending message to MATH. Retype.</li>
+    </ol>
+    
+    <p>Some individual error messages of note are the following:</p>
+    
+    <p><em>Sorry. Say again.:</em> Retype.<br>
+    <em>I can't express value in your form.</em> Usually underscores to left of decimal point are insufficient in number. (An underscore is needed for a minus sign if the value is negative.)<br>
+    <em>I have too many values for the form.</em> Check for correct number of fields. Note in the examples, however, that the number of values can be less than the number of fields and that underscores can also fill fields.<br>
+    <em>I have nothing to do.</em> Calculation in progress is complete or canceled. A new <em>Do</em> is needed.</p>
+</div>
+
+</body>
+</html>

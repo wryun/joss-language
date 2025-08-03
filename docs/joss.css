@@ -1,0 +1,169 @@
+body {
+    font: 1rem "Courier New", monospace;
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fafafa;
+}
+
+.page {
+    background: #fdfcf8;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: 900px;
+    position: relative;
+}
+
+.page-number {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+}
+
+h1 {
+    font: inherit;
+    font-style: italic;
+    text-decoration: underline;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font: inherit;
+    font-style: italic;
+    text-decoration: underline;
+    text-transform: uppercase;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    font: inherit;
+    text-decoration: underline;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.user-input {
+    color: #181;
+}
+
+.code-block {
+    color: #555;
+    white-space: pre;
+}
+
+.footnote {
+    border-top: 1px solid #000;
+    margin-top: 3rem;
+    padding-top: 1rem;
+}
+
+.centered {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.code-with-comments {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.code-with-comments .code-block {
+    flex: 1;
+}
+
+.comment-column {
+    width: 50%;
+    font-style: italic;
+}
+
+.comment-diagram {
+    width: 100%;
+    display: flex;
+
+    svg {
+        flex-grow: 1;
+    }
+}
+
+.indent {
+    margin-left: 9rem;
+}
+
+ol {
+    margin-left: 1rem;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 1rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+dl {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+}
+
+dt {
+    grid-column: 1;
+    font-weight: normal;
+    margin-left: 3rem;
+    align-self: start;
+}
+
+dd {
+    grid-column: 2;
+    margin: 0;
+    padding: 0;
+    align-self: start;
+}
+
+table {
+    margin: 0 auto;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table th {
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+    font-weight: normal;
+    padding: 0.5rem;
+}
+
+table td {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    text-align: center;
+}
+
+.keyboard-image {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.keyboard-image img {
+    width: 100%;
+    max-width: 400px;
+    height: 150px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+}
+
+.keyboard-label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+

@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="joss.css">
+    <title>MATH(JOSS) - Chapter 4: Vocabulary</title>
+</head>
+<body>
+
+<div class="page">
+    <div class="page-number">23</div>
+    
+    <h1>IV. Vocabulary</h1>
+    
+    <h2>Math Objects</h2>
+    
+    <p>The following words and phrases are called MATH objects:</p>
+    
+    <table>
+        <tr><td><em>step</em> —</td><td><em>all steps</em></td><td><em>part</em> —</td><td><em>all parts</em></td></tr>
+        <tr><td><em>form</em> —</td><td><em>all forms</em></td><td><em>formula</em> —</td><td><em>all formulas</em></td></tr>
+        <tr><td><em>all</em> (everything)</td><td><em>all values</em> (values of all stored letters)</td><td></td><td></td></tr>
+    </table>
+    
+    <p>These objects may be deleted, typed, or stored. (See <em>Delete</em>, <em>Type</em>, <em>Store</em>.) The dashes may be filled with a specific number or with an expression that computes a number or formula identifier.</p>
+    
+    <dl>
+        <dt><em>users</em>:</dt>
+        <dd>This is the number of MATH consoles in use, not just those computing (not available at all locations).</dd>
+        
+        <dt><em>time</em>:</dt>
+        <dd>This is actual 24-hour clock time at the computer center.</dd>
+    </dl>
+    
+    <p>Note that <em>users</em> and <em>time</em> appear only in <em>Type</em> commands.</p>
+    
+    <div class="code-block"><span class="user-input">Type users.</span>
+      users:   15
+<span class="user-input">Type time.</span>
+       time:   11:33</div>
+</div>
+
+<div class="page">
+    <div class="page-number">24</div>
+    
+    <h2>Do</h2>
+    
+    <p>This is the primary verb that initiates a computation. Upon completion of what the Do has ordered, control is returned to the point just after that <em>Do</em>. If <em>Do</em> is given as a direct command, then control is returned to you. If it is stored, control returns to the step just after the <em>Do</em> step in the same part, and computation continues. <em>Do</em> can order either a single step or a part to be executed. Only the <em>Do</em> command can be modified by a <em>for</em> phrase. (See page 35.)</p>
+    
+    <p><em>Do</em> is interpreted only once. At that time, all values specified by expressions in the <em>for</em> phrase are calculated using current letter values and are saved. Hence, you cannot change the execution range of <em>Do</em> by giving new values to the letters in a <em>for</em> phrase range, as in FORTRAN. See <em>Done</em>/<em>Quit</em> (Page 27) for escape methods.</p>
+    
+    <p>Any <em>if</em> clauses modifying <em>Do</em> commands are interpreted only when the <em>Do</em> is first met, so that the <em>if</em> condition does not apply during the subsequent repetitions over the set of values specified by the <em>for</em> phrase.</p>
+    
+    <div style="display: flex; align-items: flex-start; gap: 2rem; margin: 2rem 0;">
+        <div class="code-block" style="flex: 1;"><span class="user-input">1.1 Type "step 1.1".
+1.2 Do part 2.
+1.3 Type "step 1.3".
+
+2.1 Type "step 2.1".
+2.2 Type "step 2.2".
+
+Do part 1.</span>
+step 1.1
+step 2.1
+step 2.2
+step 1.3
+
+<span class="user-input">Do step 2.1.</span>
+step 2.1
+
+<span class="user-input">Do part 2.</span>
+step 2.1
+step 2.2</div>
+        
+        <div style="flex-shrink: 0; width: 200px;">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <text x="180" y="15" font-size="12">Time &#8594;</text>
+                
+                <!-- Step execution diagram -->
+                <circle cx="30" cy="30" r="3" fill="black"/>
+                <text x="35" y="35" font-size="10">1.1</text>
+                
+                <line x1="30" y1="30" x2="60" y2="60" stroke="black" stroke-width="1"/>
+                <circle cx="60" cy="60" r="3" fill="black"/>
+                <text x="65" y="65" font-size="10">1.2</text>
+                
+                <line x1="60" y1="60" x2="120" y2="90" stroke="black" stroke-width="1"/>
+                <circle cx="120" cy="90" r="3" fill="black"/>
+                <text x="125" y="95" font-size="10">2.1</text>
+                
+                <line x1="120" y1="90" x2="150" y2="120" stroke="black" stroke-width="1"/>
+                <circle cx="150" cy="120" r="3" fill="black"/>
+                <text x="155" y="125" font-size="10">2.2</text>
+                
+                <line x1="150" y1="120" x2="180" y2="150" stroke="black" stroke-width="1"/>
+                <circle cx="180" cy="150" r="3" fill="black"/>
+                <text x="185" y="155" font-size="10">1.3</text>
+            </svg>
+            
+            <p style="font-style: italic; font-size: small; margin-top: 1rem;">In this diagram MATH's attention is shown flowing from left-most dot (opposite Do part 1.) to the next dot (opposite step 1.1), to the next dot (opposite step 1.2), and so forth.</p>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">25</div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type x.
+1.2 Set x=10.
+1.3 Type x↑2.
+1.4 Line.
+
+Do part 1 for x=1(1)4.</span>
+        x =             1
+        x↑2 =           100
+
+        x =             2
+        x↑2 =           100
+
+        x =             3
+        x↑2 =           100
+
+        x =             4
+        x↑2 =           100</div>
+        <div class="comment-column">
+            Note that values of x specified by the <em>for</em> clause are retained and used in successive iterations even though x has a new value set at step 1.2.
+        </div>
+    </div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type x.
+
+Do part 1 for x=1(1)3 if x≤2.</span>
+x = ???
+<span class="user-input">Set x=2.
+Do part 1 for x=1(1)3 if x≤2.</span>
+        x =             1
+        x =             2
+        x =             3</div>
+        <div class="comment-column">
+            The <em>if</em> clause evaluated before <em>Do</em> execution.
+            <br><br>
+            The <em>if</em> clause evaluated only once-- before <em>Do</em> execution.
+        </div>
+    </div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.2 Set x=100.
+Do part 1 for x=1(1)3.</span>
+        x =             1
+        x =             2
+        x =             3</div>
+        <div class="comment-column">
+            Iteration values saved by <em>Do</em> execution.
+        </div>
+    </div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Do part A for A=1,2,3.</span>
+A = ???</div>
+        <div class="comment-column">
+            <em>Do</em> command interpreted only once.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">26</div>
+    
+    <h2>To</h2>
+    
+    <p>This is a stored command only. It will move computation to the step or part indicated, but will not return control to the step following the <em>To</em> step. Computation continues as directed by the program subsequent to the point reached by the <em>To</em> command. <em>To</em> can send you freely backward and forward in the program.</p>
+    
+    <div style="display: flex; align-items: flex-start; gap: 2rem; margin: 2rem 0;">
+        <div class="code-block" style="flex: 1;"><span class="user-input">1.1 Type "step 1.1".
+1.2 To part 2.
+1.3 Type "step 1.3".
+
+2.1 Type "step 2.1".
+2.2 Type "step 2.2".
+
+Do part 1.</span>
+step 1.1
+step 2.1
+step 2.2
+
+<span class="user-input">2.3 To step 1.3.
+Do part 1.</span>
+step 1.1
+step 2.1
+step 2.2
+step 1.3</div>
+        
+        <div style="flex-shrink: 0; width: 200px;">
+            <svg width="200" height="250" viewBox="0 0 200 250">
+                <!-- First execution path -->
+                <circle cx="30" cy="30" r="3" fill="black"/>
+                <text x="35" y="35" font-size="10">1.1</text>
+                
+                <line x1="30" y1="30" x2="60" y2="60" stroke="black" stroke-width="1"/>
+                <circle cx="60" cy="60" r="3" fill="black"/>
+                <text x="65" y="65" font-size="10">1.2</text>
+                
+                <line x1="60" y1="60" x2="120" y2="90" stroke="black" stroke-width="1"/>
+                <circle cx="120" cy="90" r="3" fill="black"/>
+                <text x="125" y="95" font-size="10">2.1</text>
+                
+                <line x1="120" y1="90" x2="150" y2="120" stroke="black" stroke-width="1"/>
+                <circle cx="150" cy="120" r="3" fill="black"/>
+                <text x="155" y="125" font-size="10">2.2</text>
+                
+                <!-- Second execution path with To command -->
+                <circle cx="30" cy="170" r="3" fill="black"/>
+                <text x="35" y="175" font-size="10">1.1</text>
+                
+                <line x1="30" y1="170" x2="60" y2="190" stroke="black" stroke-width="1"/>
+                <circle cx="60" cy="190" r="3" fill="black"/>
+                <text x="65" y="195" font-size="10">1.2</text>
+                
+                <line x1="60" y1="190" x2="120" y2="210" stroke="black" stroke-width="1"/>
+                <circle cx="120" cy="210" r="3" fill="black"/>
+                <text x="125" y="215" font-size="10">2.1</text>
+                
+                <line x1="120" y1="210" x2="150" y2="230" stroke="black" stroke-width="1"/>
+                <circle cx="150" cy="230" r="3" fill="black"/>
+                <text x="155" y="235" font-size="10">2.2</text>
+                
+                <line x1="150" y1="230" x2="180" y2="250" stroke="black" stroke-width="1"/>
+                <circle cx="180" cy="250" r="3" fill="black"/>
+                <text x="185" y="255" font-size="10">1.3</text>
+                
+                <text x="10" y="150" font-style="italic" font-size="9">Note that step 1.3 is absent.</text>
+                
+                <circle cx="30" cy="140" r="2" fill="black"/>
+                <text x="35" y="145" font-size="9">2.3</text>
+            </svg>
+            
+            <p style="font-style: italic; font-size: small; margin-top: 1rem;">Compare with <em>Do</em> example page 24.</p>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">27</div>
+    
+    <h2>Done/Quit</h2>
+    
+    <p>The <em>Do</em> command will normally be executed for the successive values in the set given by the <em>for</em> phrase. If a <em>Done</em> statement is reached in this execution, nothing specified farther on in the program will be done for the current value being processed. However, the remaining values will be processed. If a <em>Quit</em> statement is reached, neither the current value nor any of the remaining values will be further processed. <em>Done</em> and <em>Quit</em> may have an <em>if</em> clause. In this case the above behavior with respect to the current value and subsequent values is subject to that condition. In MATH, each part is provided automatically with an implied <em>Done</em> command as its last step. That is, as each current value being processed reaches this step, nothing further is done with it. <em>Quit</em> but not <em>Done</em>, may be used directly.</p>
+    
+    <div style="display: flex; align-items: flex-start; gap: 2rem; margin: 2rem 0;">
+        <div class="code-block" style="flex: 1;"><span class="user-input">1.1 Do part 2 for i=1(1)4.
+1.2 Type i.
+
+2.1 Quit if x=1.
+2.2 Done if i=2 or i=3.
+2.3 Type i in form 1.
+
+Form 1:
+### ###
+
+Do part 1 for x=0.</span>
+### 1###
+### 4###
+        i =             4
+
+<span class="user-input">Do part 1 for x=1.</span>
+        i =             1</div>
+        
+        <div style="flex-shrink: 0; width: 200px;">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <!-- Flow diagram showing iterations -->
+                <circle cx="30" cy="30" r="3" fill="black"/>
+                <text x="10" y="25" font-size="10">i=1</text>
+                
+                <line x1="30" y1="30" x2="60" y2="50" stroke="black" stroke-width="1"/>
+                <circle cx="60" cy="50" r="3" fill="black"/>
+                <text x="45" y="45" font-size="10">i=2</text>
+                
+                <line x1="60" y1="50" x2="90" y2="70" stroke="black" stroke-width="1"/>
+                <circle cx="90" cy="70" r="3" fill="black"/>
+                <text x="75" y="65" font-size="10">i=3</text>
+                
+                <line x1="90" y1="70" x2="120" y2="90" stroke="black" stroke-width="1"/>
+                <circle cx="120" cy="90" r="3" fill="black"/>
+                <text x="105" y="85" font-size="10">i=4</text>
+                
+                <line x1="120" y1="90" x2="180" y2="120" stroke="black" stroke-width="1"/>
+                <circle cx="180" cy="120" r="3" fill="black"/>
+                
+                <circle cx="50" cy="150" r="2" fill="black"/>
+                <text x="10" y="155" font-size="10">x=0</text>
+                
+                <circle cx="50" cy="180" r="2" fill="black"/>
+                <text x="10" y="185" font-size="10">x=1</text>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">28</div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Set i=i+1.
+1.2 Quit if i=5.
+1.3 Done if i&gt;3.
+1.4 Type i.
+
+i=0
+Do part 1, 10 times.</span>
+        i =             1
+        i =             2
+        i =             3
+
+<span class="user-input">Type i.</span>
+        i =             5</div>
+        <div class="comment-column">
+            <em>Quit</em> and <em>Done</em> apply also to "times" iterations.
+        </div>
+    </div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Do part 2 for j=1(1)5.
+
+2.1 Demand a(i,j).
+Do part 1 for i=1(1)3.</span>
+        a(1,1) = 4
+        a(1,2) =
+I'm at step 2.1.
+
+<span class="user-input">Quit.</span>
+Done. I'm ready to go from step 1.1.
+
+<span class="user-input">Go.</span>
+        a(2,1) =
+I'm at step 2.1.
+<span class="user-input">Quit.</span>
+Done. I'm ready to go from step 1.1.
+
+<span class="user-input">Quit.</span>
+
+<span class="user-input">Quit.</span>
+I have nothing to do.</div>
+        <div class="comment-column">
+            RETURN pressed, which interrupts.
+            <br><br><br><br>
+            Next execution point after 1.1 (the next value for <em>j</em>).
+            <br><br><br>
+            RETURN pressed.
+            <br><br><br>
+            No more action for the <em>Do</em> in 1.1.
+            <br><br>
+            No more action for the direct <em>Do</em>, so control returns to the user.
+            <br><br>
+            There is now nothing to quit.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">29</div>
+    
+    <h2>Stop/Cancel/End</h2>
+    
+    <p><em>Stop</em> is programmed interrupt (stored only) that returns control to you. This permits some operator action. A subsequent <em>Go</em> command will resume computation at the step following the <em>Stop</em> step.</p>
+    
+    <p><em>Cancel</em> may only be used directly. The machine's knowledge of current position in the computation is erased, without destroying either values computed up to that point or the program itself. A <em>Do</em> command is needed to restart the computation. A new <em>Do</em> command alone would achieve the same erasure and would start a new computation. But if you are space limited (See page 39), <em>Cancel</em> will give you back maneuver space and let you restart after corrections and insertion of new values. It is a rarely used verb.</p>
+    
+    <p><em>End</em> is used to terminate a MATH session. It may be given directly or stored. DOS/MATH termination differs from CTS/MATH termination.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Set f(i)=i*2.
+Do part 1 for i=-100(1)100.</span>
+I'm at step 1.1.
+<span class="user-input">Cancel.</span>
+<span class="user-input">Go.</span>
+I have nothing to do.</div>
+        <div class="comment-column">
+            User presses ATTN (to interrupt).
+        </div>
+    </div>
+    
+    <div class="code-block"><span class="user-input">1.1 Type "Please set margin stops at 6 and 106.".
+1.2 Stop.
+1.3 Type "Thank you.".
+Do part 1.</span>
+Please set margin stops at 6 and 106.
+Stopped by step 1.2.
+<span class="user-input">Go.</span>
+Thank you.
+
+<span class="user-input">End.</span>
+Ended at 15:37.
+
+<span class="user-input">1.1 End.
+Do part 1.</span>
+
+SELECTION: <span class="user-input">end</span>
+OFF AT 15:42</div>
+    
+    <div class="comment-column" style="margin-top: 2rem;">
+        <em>Signed off DOS/MATH.</em>
+        <br><br><br><br>
+        <em>Off MATH but not off CTS. Signed off CTS.</em>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">30</div>
+    
+    <h2>Go</h2>
+    
+    <p>This command continues computation in progress after a programmed or manual interruption, as if the interruption had not occurred. Interruptions may occur because of (1) an error message, (2) pressing ATTN button, or (3) a programmed <em>Stop</em> verb. During the interruption, program or values may be modified as desired. If no computation was in progress (although you may have thought so) <em>Go</em> will produce the <em>I have nothing to do.</em> message. <em>Go</em> can only be used after MATH says he is somewhere.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type x.
+1.2 Stop.
+1.3 Type x*3.
+
+Do part 1.</span>
+Error at step 1.1:    x = ???
+<span class="user-input">x=2
+Go.</span>
+        x =             2
+Stopped by step 1.2.
+
+<span class="user-input">1.25 To step 1.25.
+Go.</span>
+I'm at step 1.25.
+
+<span class="user-input">Delete step 1.25.
+Go.</span>
+        x*3 =           8
+<span class="user-input">Go.</span>
+I have nothing to do.</div>
+        <div class="comment-column">
+            A meaningless loop.
+            <br><br><br>
+            User presses ATTN (to interrupt).
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">31</div>
+    
+    <h2>Delete</h2>
+    
+    <p>The verb <em>Delete</em> followed by one or more MATH objects, separated by commas, may be used directly or indirectly, and will cause those objects to disappear. Any letter or mixed lists of objects and letters can be erased similarly. <em>Delete</em> may also be used to erase an item stored in the file. (See page 46.)</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type all.</span>
+
+<span class="user-input">1.1 Delete part 1.
+1.2 Set r=fp(291·r).
+1.3 Type "I'm step 1.3".
+
+2.1 Set g=t(100·ip(r)).</span>
+
+Form 1:
+_____.___    ........
+
+t(k): s·f(k)/r(k)
+
+        s =             3.7901
+
+        a(1,1) =        4
+
+<span class="user-input">Delete step 1.2, part 2, form 1,s,a, formula t.
+Type all.</span>
+
+<span class="user-input">1.1 Delete part 1.
+1.3 Type "I'm step 1.3".
+Do part 1.
+Type all.</span></div>
+        <div class="comment-column">
+            Steps organized into parts.
+            <br><br><br><br><br><br><br>
+            <em>Form.</em>
+            <br><br>
+            <em>Formula.</em>
+            <br><br><br>
+            <em>Values.</em>
+            <br><br><br><br><br>
+            May be used indirectly.
+            <br><br><br>
+            Blank lines follow to indicate nothing stored.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">32</div>
+    
+    <h2>Set</h2>
+    
+    <p>This is a replacement operation that assigns a new value -- given on the right of the equals sign -- to the identifier named on the left (a letter or an indexed letter). <em>Set</em> can be direct or indirect. In the direct mode, the word <em>Set</em> and the terminal period may be omitted. <em>Set</em> computes the right-hand expression just once and stores the value at a given place, named on the left-hand side. For indexed letters, values corresponding to each integral index are correspondingly stored in places named by the left-hand side. Note that indices can play the role of subscripts. (See page 33 for the important distinction between <em>Let</em> and <em>Set</em>.) Note that, say, the order <em>Type A.</em> will produce all values of <em>A</em> if <em>A</em> is an indexed letter.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Set x=x+1.</span>
+x = ???
+<span class="user-input">x=3
+x=x+1
+Type x.</span>
+        x =             4
+
+<span class="user-input">Set a(-1,2)=3.
+a(1,-2)=1
+Type a.</span>
+        a(-1,2) =       3
+        a(1,-2) =       1
+<span class="user-input">Set a(1,2,3,-5)=4.
+Type a.</span>
+        a(1,2,3,-5) =   4
+
+<span class="user-input">1.1 x=5
+1.2 Type x.
+Do part 1.</span>
+Error at step 1.1:    Eh?</div>
+        <div class="comment-column">
+            The word <em>Set</em> and the period are optional in direct commands.
+            <br><br><br><br><br><br><br><br>
+            Array of new dimension replaces old.
+            <br><br><br>
+            The word <em>Set</em> must be used in stored commands.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">33</div>
+    
+    <h2>Let</h2>
+    
+    <p>This command is used to define functions, called "formulas" in MATH, of at most 10 variables (called "parameters" in error messages). <em>Let</em> defines a rule for computation that is invoked each time the function is referenced. Unlike <em>Set</em>, the value computed is not stored but is used transiently. The rule, like <em>Set</em>, are dummies--they do not affect the values of stored letters "parameters" are some names. (The command <em>Set f(x)=3.</em> requires x to be an integer, with the some since we are naming a storage place, by the letter and the index.) |x|≤250, since we are naming a storage place, by the letter and the index.)</p>
+    
+    <p><em>Let</em> is normally used directly since the defined function is usually employed in the program as a whole. It is used indirectly when in the course of the program the function is to be redefined (thus erasing the previous definition).</p>
+    
+    <p><em>Let</em> can be used to abbreviate an expression (e.g., <em>Let s=sqrt(x↑2+y↑2).</em>). In this case where s is needed, current stored values of x and y will be used. If there is no stored x, MATH will say, <em>Error in formula s: x = ???</em> when you type <em>x=1</em>, this becomes a stored value. On the other hand, <em>Let s(x,y)=</em> sqrt(x↑2+y↑2), permits calling via s(1,8). As explained above, x,y are now dummies, and stored values are not affected.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Let f(a,b,c,d,e,f,g,h,i,j,k,l)=a+b+c.</span>
+Please limit number of parameters to 10.
+
+<span class="user-input">Set S(x,y)=sqrt(x↑2+y↑2).</span>
+x = ???
+
+<span class="user-input">Let S(x,y)=sqrt(x↑2+y↑2).
+Type S(1,2).</span>
+        S(1,2) =        2.23606797
+
+<span class="user-input">Type S(3+45,4·5/17).</span>
+S(3+45,4·5/17) =        48.0144153
+
+<span class="user-input">Let D(f,x)=[f(x+d)-f(x)]/d.
+d=.00001</span>
+
+<span class="user-input">Type D(sin,0), D(cos,0).</span>
+        D(sin,0) =      1
+        D(cos,0) =      0</div>
+        <div class="comment-column">
+            Any expression may be used for the argument.
+            <br><br><br><br>
+            Derivative of function f at x. Note that parameters may name formulas, functions, or values.
+            <br><br>
+            Derivative of sine and cosine at zero.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">34</div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Let s = sqrt(x↑2+y↑2).
+Type formula s.</span>
+        s:      sqrt(x↑2+y↑2)
+
+<span class="user-input">Type s.</span>
+Error in formula s:    x = ???
+<span class="user-input">x=3
+y=7
+Type s.</span>
+        s =             7.61577311
+<span class="user-input">Let S(x,y) = sqrt(x↑2+y↑2).
+Type S.</span>
+        S(x,y): sqrt(x↑2+y↑2)
+<span class="user-input">Type S(.1, 10.05).</span>
+S(.1, 10.05) =          10.0504975
+<span class="user-input">Type x,y.</span>
+        x =             3
+        y =             7
+
+<span class="user-input">Let I(x) = 1≤x&lt;2.
+Type I(3), I(1.05).</span>
+        I(3) =          false
+        I(1.05) =       true
+
+<span class="user-input">Let B(i) = [ i=0:L; B(i-1)&lt;P:0; B(i-1)·(1+r)-P ]
+L=1000
+P=100
+r=.005
+
+1.1 Type I,B(I) in form 1.
+Form 1:
+___     ___
+
+Do part 1 for I=0(1)11.</span>
+0       1000.00
+1       905.00
+2       809.53
+3       713.57
+4       617.14
+5       520.23
+6       422.83
+7       324.94
+8       226.57
+9       127.70
+10      28.34
+11      .00</div>
+        <div class="comment-column">
+            Note colon.
+            <br><br><br><br><br><br><br>
+            Equivalent to <em>Type formula S.</em>
+            <br><br><br>
+            Note that values of x, y are unaffected by <em>Type S.</em>
+            <br><br><br><br><br><br><br>
+            See page 58 for Conditional Functions.
+            <br><br><br><br><br><br><br>
+            Formula B calculates, in a recursive way, the balance of loan L which has payment P and interest rate r.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">35</div>
+    
+    <h2>For/Times</h2>
+    
+    <p>The word <em>for</em> gives the set of values (See page 18) for which a <em>Do</em> order is to be executed. It can be used only with the verb <em>Do</em>. The set of values in the <em>for</em> phrase is stored, as if a <em>Set</em> command had been used for each value successively.</p>
+    
+    <p>An additional modifier for the <em>Do</em> command only is <em>times</em>:</p>
+    
+    <p>Do step ___, n times.<br>
+    Do part ___, n times.</p>
+    
+    <p>Note the comma, which makes it possible to avoid an unpleasant conjunction of numbers, and the integer n, which, as always in MATH, may arise from a computation.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Type i.
+Do part 1 for i=2(3)10(5)20,100,.003.</span>
+        i =             2
+        i =             5
+        i =             8
+        i =             10
+        i =             15
+        i =             20
+        i =             100
+        i =             .003
+<span class="user-input">Do part 1 for i=0(1/3)1.</span>
+        i =             0
+        i =             .333333333
+        i =             .666666666
+        i =             .999999999
+        i =             1
+<span class="user-input">Do part 1, 3 times.</span>
+        i =             1
+        i =             1
+        i =             1
+<span class="user-input">Do part 1, .56 times.</span>
+Number-of-times must be integer and ≥ 0.</div>
+        <div class="comment-column">
+            Expressions for numbers could have been used.
+            <br><br><br>
+            Note that range end point is always hit exactly.
+            <br><br><br><br><br><br><br><br><br><br>
+            Last stored value of i is 1.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">36</div>
+    
+    <h2>If</h2>
+    
+    <p>This word may be used to qualify any command. It specifies the conditions under which the imperative will be executed. These conditions may contain logical and algebraic expressions. In examining a command with an <em>if</em> clause, MATH first evaluates the condition in that clause. When the condition is not met, the command is not processed in any way. Thus the command could be in error and the error not detected until the condition is finally met. (See also examples under <em>Do</em>, page 24.)</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">x=1
+y=4
+Type x if x=1 and y&lt;34.</span>
+        x =             1
+
+<span class="user-input">Type x if x=3 and not (x+y&gt;34) or y≠17.
+Set y=35 if x&lt;40.
+Type y.</span>
+        y =             35
+
+<span class="user-input">1.1 Type 1≤x&lt;3&lt;y≤a.
+Do step 1.1 for a=15,100.</span>
+        1≤x&lt;3&lt;y≤a =     false
+        1≤x&lt;3&lt;y≤a =     true
+
+<span class="user-input">Do step 1.1 if y&gt;10↑6.</span>
+
+<span class="user-input">Type garbage if y=0.</span></div>
+        <div class="comment-column">
+            Compound condition.
+            <br><br><br><br><br>
+            Condition fails, so command is not interpreted
+            <br><br>
+            Condition fails, so command is not interpreted.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">37</div>
+    
+    <h2>Type</h2>
+    
+    <p><em>Type</em> may be direct or stored. Any MATH object (Page 23) can follow <em>Type</em>, as may any letter or expression, or any list of objects, letters, and expressions separated by commas. The command causes appropriate typeout on successive lines.</p>
+    
+    <p>If double quotes are placed around any expression or text, it will be typed out verbatim without quotes. (Single quotes are not part of MATH punctuation.) The underscore will cause a corresponding blank line in the typeout.</p>
+    
+    <p>The MATH word <em>in</em> appears only in the command <em>Type __ in form __</em>. (See page 42).</p>
+    
+    <div class="code-block"><span class="user-input">x=3
+Let y=x↑2.
+1.1 Type x,y in form 3.
+Form 3:
+x=___    y=___ appear in form 3.
+Type x, step 1.1, form 3, formula y.</span>
+        x =             3
+1.1 Type x,y in form 3.
+x=___    y=___ appear in form 3.
+        y:      x↑2
+
+<span class="user-input">Type "MATH".</span>
+MATH
+<span class="user-input">Type ""MATH""MATH"".</span>
+"MATH""MATH"
+
+<span class="user-input">Type x,___,y.</span>
+        x =             3
+
+        y =             9</div>
+</div>
+
+<div class="page">
+    <div class="page-number">38</div>
+    
+    <h2>Timer</h2>
+    
+    <p>This measures real time in minutes and hundredths of minutes since the instant of console activation or since the last (unique) command <em>Reset timer</em>.. The word <em>timer</em> may be used in computational expressions (hence minutes and hundredths). (See pages 61-63 for some uses of <em>timer</em>.)</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type timer.</span>
+        timer =         13.1
+
+<span class="user-input">Reset timer.
+
+Type timer.</span>
+        timer =         .12
+
+<span class="user-input">Set x=timer.
+Type timer-x.</span>
+        timer-x =       .18
+
+<span class="user-input">Set timer =5.</span>
+Eh?</div>
+        <div class="comment-column">
+            Value of <em>timer</em> may not be set.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">39</div>
+    
+    <h2>Size</h2>
+    
+    <p>An individual MATH user has at his disposal a maximum of about 1500 cells (storage area), even if he is the sole user. Some locations may restrict you to fewer cells. A cell will hold one numerical value (but some overhead is required for array rows and columns) or nine characters of a program step, form, or formula. The response to the command <em>Type size</em> is the number of cells currently in use. Since <em>size</em> may be used in computational expressions, the user may arrange his program to alert him to an imminent out-of-space error message. During the execution of a <em>Do</em> command, cells are also required to record the progress of that execution. Similarly, cells are needed for the evaluation of each formula. (Note that chaining (pages 47 and 65) may be used for large problems.)</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type size.</span>
+        size =          0
+<span class="user-input">1.1 Set a(i,j)=i+j.
+
+2.1 Do part 1 for j=-250(1)250.
+
+Do part 2 for i=-250(1)250.</span>
+I'm at step 1.1. I ran out of space.
+
+<span class="user-input">Type size.</span>
+        size =          1352
+
+<span class="user-input">Cancel.</span>
+<span class="user-input">Type size.</span>
+        size =          1336
+
+<span class="user-input">Delete a.
+Type size.</span>
+        size =          11</div>
+        <div class="comment-column">
+            <em>Cancel</em> retrieves 16 cells that were used for the execution records of <em>Do</em>.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">40</div>
+    
+    <h2>Demand</h2>
+    
+    <p>This is a stored command only. The order allows the program to call for values to be typed in by the user, thus minimizing the amount of typing to be done, systematizing inputs, and avoiding failures to input needed data. MATH types out the requested letter, which may be indexed, and an equals sign. The user types the desired value or expression to the right. If the user terminates his input line with an asterisk, the line is ignored and the <em>Demand</em> request is made again. If the user's response is improper formed, MATH returns an appropriate error message and makes the request again. If the user hits RETURN only, MATH considers it to be an interrupt and returns control to the user with an appropriate message.</p>
+    
+    <p>If the <em>Demand</em> command is followed by the word <em>as</em> and a string of text in quotes, MATH will type the quoted text followed by an equals sign to identify the requested value.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Demand a(i).
+
+Do part 1 for i=1(1)5.</span>
+        a(1) = <span class="user-input">10</span>
+        a(2) = <span class="user-input">3.5+24</span>
+        a(3) = <span class="user-input">sin(4.789)</span>
+        a(4) = <span class="user-input">a(2)+3*a(3)</span>
+        a(5) = <span class="user-input">28.75*</span>
+        a(5) = <span class="user-input">atemp</span>
+Eh?
+        a(5) = 
+I'm at step 1.1.
+<span class="user-input">a(1)=100
+
+Go.</span>
+        a(5) = <span class="user-input">15</span>
+
+<span class="user-input">1.1 Demand E as "Voltage maximum".
+
+Do part 1.</span>
+Voltage maximum = <span class="user-input">135.5</span></div>
+        <div class="comment-column">
+            Any expression may be given.
+            <br><br><br>
+            Input ignored and request repeated.
+            <br><br><br>
+            Carrier return only is an interrupt.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">41</div>
+    
+    <h2>Sparse</h2>
+    
+    <p>This term is used only in the command <em>Let A be sparse.</em>, where <em>A</em> is the name of an array with up to 10 indices. When <em>A</em> is declared sparse and values have been given to some of the array's elements, MATH considers all other elements to be zero. If a new <em>A</em> is entered with a different number of indices, the old <em>A</em> is erased and the new <em>A</em> must be redeclared sparse. Inputting elements is a <em>Set</em> operation, and hence only these elements are stored. The command corresponds to <em>Let</em>, in that nonstored elements are "computed" to be zero. Hence <em>sparse</em> saves storage space and inputting effort.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">a(2,3,4)=7
+Type a(2,3,5).</span>
+a(2,3,5) = ???
+<span class="user-input">Let a be sparse.
+Type a(2,3,5).</span>
+        a(2,3,5) =      0
+<span class="user-input">Type a.</span>
+        a(2,3,4) =      7
+a is sparse
+
+<span class="user-input">a(2,3)=23
+Type a.</span>
+        a(2,3) =        23
+<span class="user-input">Type a(1,2).</span>
+a(1,2) = ???
+<span class="user-input">Let a be sparse.
+Type a(1,2).</span>
+        a(1,2) =        0</div>
+        <div class="comment-column">
+            Because the command requested all values of a.
+            <br><br><br>
+            New array replaces old.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">42</div>
+    
+    <h2>Form</h2>
+    
+    <p>A <em>form</em> describes how you want your output to appear. In the body of the program, the order is: <em>Type "list" in form n.</em>. The "list" is usually a set of letters or expressions, separated by commas, whose values will be typed out following the form's layout. The form number <em>n</em> is an integer (1≤<em>n</em>&lt;10⁹) but may be an expression whose value will be computed.</p>
+    
+    <p>Forms are typed directly. The first line is simply <em>Form n:</em>. The second line is a set of fields and/or internal information, spaced as desired.</p>
+    
+    <p>A field is a string of underscores, perhaps with a decimal point, or a string of periods. Values will fill these fields in the order specified, rounded as necessary. All other characters in the form are typed out exactly as they were typed in (including asterisk).</p>
+    
+    <p>The number of underscores to the right of a decimal point indicates the desired roundoff. The number of underscores to the left must be adequate to hold the expected integer part of computed values, including a minus sign. It is usually simplest to be generous. A field of periods will be filled by the value in scientific notation. The minimum field of 7 periods will give just two significant digits. The first period is reserved for the sign of the value, and the third from the end is reserved for the sign of the exponent.</p>
+    
+    <p>Forms without fields are useful to output headings, messages, and the like. In this case, the second line of the form definition is the desired text and the command is simply <em>Type form n.</em>.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Form 1:
+_____ ___.___ .......
+
+x=12.356
+Type x,x,x in form 1.</span>
+12    12.4   1.2 01
+
+<span class="user-input">Type x,x,x,x in form 1.</span>
+I have too many values for the form.
+
+<span class="user-input">Type x,x in form 1.</span>
+12    12.4
+
+<span class="user-input">x=1234.5678
+Type x,x,x in form 1.</span>
+I can't express value in your form.
+
+<span class="user-input">Form 4:
+..........................
+Type -2/3 in form 4.</span>
+-6.66666670000000000000-01</div>
+        <div class="comment-column">
+            Note rounding into form.
+            <br><br><br><br>
+            Fewer values than fields OK.
+            <br><br><br><br><br><br>
+            Note rounding to 9 significant digits.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">43</div>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Form 1:
+    amps. ___.___ volts.
+Form 2:
+    amps. ....... volts (voltage ≥ 1000).
+___.__
+
+Type I, I·R in form (I·R&lt;1000:1; 2 ).
+1.1
+R=81
+
+Do step 1.1 for I = 8.735(1.05)12.9.</span>
+8.7 amps.  794.9 volts.
+9.2 amps.  890.4 volts.
+9.8 amps.  986.0 volts.
+10.8 amps. 1.1503 volts (voltage ≥ 1000).
+11.9 amps. 1.2 03 volts (voltage ≥ 1000).
+12.9 amps.
+
+<span class="user-input">1.1 Type form 2.
+1.2 Line.
+1.3 Do part 2 for x=10(10)60.
+2.1 Type sin(x), log(x), exp(x) in form 1.
+Form 1:
+___.__    ___.__    .......
+Form 2:
+SIN(X)    LOG(X)    EXP(X)
+
+Do part 1.</span>
+SIN(X)    LOG(X)    EXP(X)
+
+-.54      2.30      2.20 04
+.91       3.00      4.85 08
+-.99      3.40      1.07 13
+.75       3.69      2.35 17
+-.26      3.91      5.18 21
+-.30      4.09      1.14 26</div>
+        <div class="comment-column">
+            Form number is computed (see page 58).
+            <br><br><br><br><br>
+            Form 1 used.
+            <br><br><br>
+            Form 2 used.
+            <br><br><br>
+            See page 44 for <em>Line</em>.
+            <br><br><br><br><br>
+            Form with literal information only.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">44</div>
+    
+    <h2>Line/Page/Head/$</h2>
+    
+    <p><em>Line</em>. advances paper one line, leaving a blank. (See also page 37.) <em>Page</em>. advances paper to start a new page. <em>Head</em>. begins a new page on the next line. These commands can be used to improve output format. The format can be programmed by appending <em>if Line and Page</em>. The symbol $ has as value the current line number on the page (1 to 54--the heading line is for administrative use only). The symbol $ is often used in <em>if</em> clauses for format control purposes.</p>
+    
+    <div class="code-block"><span class="user-input">Head.</span>
+_____ 9:38 — 4-16-68 — JRD — (7) — — — — — — — — — —
+
+<span class="user-input">Page.</span>
+
+_____ 9:39 — 4-16-68 — JRD — (8) — — — — — — — — — —
+
+<span class="user-input">Type $.</span>
+        $ =             2
+
+<span class="user-input">Line.
+
+Type $.</span>
+
+<span class="user-input">1.1 Line if fp($/3)=0.
+1.2 Type $.
+Do part 1, 4 times.</span>
+                10
+                11
+                
+                13
+                14</div>
+    
+    <div class="comment-column" style="margin-top: 3rem;">
+        <em>Line</em> command executed.
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">45</div>
+    
+    <h2>Summary</h2>
+    
+    <p>The contents of your file may be reviewed by the command <em>Type file summary.</em>. In this list, the heading SPACE refers to the number of disk spaces (See page 21.) required to store the item. DATE refers to the time that the item was stored. Your private file number is included in the final line of the summary. The contents of the general library may be listed by the command <em>Type library summary.</em>.</p>
+    
+    <div class="code-block"><span class="user-input">Type library summary.</span>
+                                     DATE        SPACE
+NAME                                2-10-68        1
+adding-machine                      4-16-68        5
+curve-plotter                       3-15-68        1
+gauss-integrate                     3-25-68        1
+loan-amortizer                      3-19-68        3
+math-lesson(1)                         ...        ...
+...                                 3-19-68        3
+math-lesson(4)                      4-01-68        2
+math-quiz                           3-15-68        1
+matrix-inverter                     4-02-68        4
+polynomial-fit                      2-23-68        6
+submarine-game                         ...       33
+TOTAL SPACE IN LIBRARY:
+
+<span class="user-input">Type file summary.</span>
+                                     DATE        SPACE
+NAME                                4-08-68        1
+cosine-test                         3-12-68        1
+data-f                              3-12-68        1
+data-g                              3-16-68        1
+example(20)                         3-14-68        1
+gauss-integrate                     3-11-68        1
+integration                         2-10-68        2
+nim-game                            3-12-68        3
+program(2)                          3-14-68        1
+root-finder                            ...       12
+TOTAL SPACE IN FILE 148:</div>
+</div>
+
+<div class="page">
+    <div class="page-number">46</div>
+    
+    <h2>Store/Delete/Get</h2>
+    
+    <p>All file commands may be direct or stored.</p>
+    
+    <p>The commands to enter material in your file are <em>Store "list" as "name"</em> or <em>Store "list" replacing "name"</em>. The "list" consists of MATH objects (See page 23.) and/or letters identifying values, arrays, or formulas. You may choose a "name" of from four to fifteen letters and/or digits. The "name" may include an integer-valued index in the range [-250,250]. In the case of <em>Store ... replacing ...</em>, MATH assigns the specified name to the newly stored item and then deletes the old item of that name.</p>
+    
+    <p>To erase an item from your file the command is <em>Delete "name"</em>. (See also page 31.)</p>
+    
+    <p>You can get a copy of an item from your file, from the library or from another file. Since it is a copy, you can manipulate or modify the item as you wish. The commands are <em>Get "name"</em>, <em>Get "name" from library.</em>, and <em>Get "name" from file "number"</em>. (See page 45 for "number".) After <em>Get</em>, you can use <em>Type</em> commands to examine the item.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Page.
+1.2 Type form 2.
+1.3 Do part 2 for i=1(1)10.
+2.3 Type b,f(b),log(f(b)) in form 1.
+Store all as example(16).</span>
+Done.
+<span class="user-input">Delete all.
+Get example(16).</span>
+Done.
+<span class="user-input">Delete step 1.1.
+1.2 Do part 10 if $≠1.
+Store all replacing example(16).</span>
+Done.
+<span class="user-input">Type all.</span>
+
+1.2 Do part 10 if $≠1.
+1.3 Do part 2 for i=1(1)10.
+
+2.3 Type b,f(b),log(f(b)) in form 1.
+
+<span class="user-input">Delete example(16).</span>
+Done.
+<span class="user-input">Delete all.
+Get matrix-inverter from library.</span>
+Done.
+<span class="user-input">Do part 1.</span></div>
+        <div class="comment-column">
+            Copies all steps, forms, formulas, and values into the file.
+            <br><br>
+            Copies from file to computer.
+            <br><br>
+            Program is modified. Replace old version with updated one.
+            <br><br><br><br><br><br><br>
+            Erases program from file.
+            <br><br>
+            Copies from library to computer.
+            <br><br>
+            Library programs start with part 1.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">47</div>
+    
+    <h2>Chaining</h2>
+    
+    <p>It is also possible to "chain" subprograms or data held in separate items and needed for a large problem. You will not run out of space or mix part numbers provided sufficient care is taken in programming the chain's housekeeping. (See page 65.)</p>
+    
+    <h2>File Warning</h2>
+    
+    <p>Getting file material is equivalent to typing in the filed material from a console during the same session. Hence step numbers, values, etc. from the item replace similarly numbered or named ones previously typed in. It is good practice to <em>Delete all.</em> before recalling an item. Otherwise, an appalling confusion of steps can result. Manipulations of files and items can be done indirectly by program, and this is most useful.</p>
+    
+    <p>File access time may vary from a few seconds to minutes, depending essentially on the number of users queuing for file access. An impatient interrupt will send you back to the end of the queue.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">Type all.</span>
+
+1.05 Set r=fp(r·291).
+
+2.45 Do part 17 for x=.003, .07(.03).15.
+
+        b(1) =          3
+        b(3) =          7
+
+<span class="user-input">Get example(20).</span>
+Done.
+<span class="user-input">Type all.</span>
+
+1.05 Set r=fp(r·291).
+1.2 Do part 10 if $≠1.
+1.3 Do part 2 for i=1(1)10.
+
+2.2 Set b=-a.
+2.3 Type b,f(b),log(f(b)),I(f(b)) in form 1.
+2.45 Do part 17 for x=.003, .07(.03).15.
+
+        b(1) =          3
+        b(3) =          7</div>
+        <div class="comment-column">
+            Recalling from the files results in a mixture of that on hand and that coming from the files.
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-number">48</div>
+    
+    <h2>Parenthetic Computation</h2>
+    
+    <p>Sometimes in the course of a calculation (say, at an interrupt point or an error message) it is convenient to perform a second calculation (to identify an error) without disturbing the one in progress. This may be accomplished by a parenthetic <em>Do</em>--a <em>Do</em> command enclosed in parentheses, process may be carried out indefinitely (subject to storage limits). The parenthetic <em>Cancel</em>. cancels the current subexecution, and the primary execution may then be resumed. Note that new values so computed for letters will remain after the parenthetic computation.</p>
+    
+    <div class="code-with-comments">
+        <div class="code-block"><span class="user-input">1.1 Demand a(i,j).
+2.1 Do part 1 for i=1(1)5.
+Do part 2 for j=1(1)5.</span>
+        a(1,1) = <span class="user-input">1</span>
+        a(2,1) = <span class="user-input">2</span>
+        a(3,1) = <span class="user-input">3</span>
+        a(4,1) = <span class="user-input">4</span>
+        a(5,1) = 
+I'm at step 1.1.
+<span class="user-input">(Do part 2 for j=1.)</span>
+        a(1,1) = <span class="user-input">2</span>
+        a(2,1) = <span class="user-input">3</span>
+        a(3,1) = <span class="user-input">4</span>
+        a(4,1) = 
+I'm at step 1.1.
+<span class="user-input">(Cancel.)</span>
+Done. I'm ready to go at step 1.1.
+<span class="user-input">Type i.</span>
+        i =             4
+<span class="user-input">i=5
+Go.</span>
+        a(5,1) = <span class="user-input">5</span>
+        a(1,2) = <span class="user-input">4+2</span>
+        a(2,2) = <span class="user-input">3+2</span>
+        a(3,2) = </div>
+        <div class="comment-column">
+            Carrier return interrupts <em>Demand</em>.
+            <br><br><br><br><br>
+            Parenthetic <em>Do</em> execution used to reenter some values.
+            <br><br><br><br>
+            Parenthetic execution is canceled.
+            <br><br><br><br>
+            Correct value of i set and suspended execution resumed.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
